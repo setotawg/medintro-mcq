@@ -1,1 +1,320 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedIntro | Microbiology Practice</title>
+<style>
+:root {
+  --bg:#0b0b0d; --panel:#18181c; --gold:#dfbd67;
+  --text:#f6f3eb; --muted:#b9b5aa; --line:#38373d;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font:16px/1.6 Arial,sans-serif;
+}
+header {
+  padding:18px; border-bottom:1px solid var(--line);
+  color:var(--gold); font-weight:bold; letter-spacing:3px;
+}
+main { max-width:850px; margin:30px auto; padding:16px; }
+.card {
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:16px; padding:24px; margin-bottom:18px;
+}
+h1,h2 { line-height:1.25; }
+.gold { color:var(--gold); }
+.muted { color:var(--muted); }
+.warning {
+  border-left:3px solid var(--gold); padding:12px;
+  background:#292417; color:#eadbb1;
+}
+label { display:block; margin-top:15px; }
+input {
+  display:block; width:100%; padding:13px; margin-top:6px;
+  background:#0e0e10; color:white; border:1px solid var(--line);
+  border-radius:8px; font-size:16px;
+}
+button {
+  border:0; border-radius:9px; padding:12px 17px;
+  font-size:15px; font-weight:bold; cursor:pointer;
+}
+.primary { background:var(--gold); color:#17130a; }
+.secondary { background:#303036; color:white; }
+button:disabled { opacity:.4; cursor:not-allowed; }
+.actions { display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; }
+.actions button { flex:1; }
+.option {
+  display:block; width:100%; text-align:left; margin:9px 0;
+  padding:14px; background:#242429; color:white;
+  border:1px solid #46454c; border-radius:10px;
+  font-weight:normal;
+}
+.option.selected { border:2px solid var(--gold); }
+.progress { height:7px; background:#38373d; margin:18px 0; }
+#bar { height:100%; width:0; background:var(--gold); }
+.hidden { display:none; }
+.review { padding:15px 0; border-bottom:1px solid var(--line); }
+footer { text-align:center; color:#777; padding:25px; font-size:13px; }
+</style>
+</head>
+<body>
+<header>MEDINTRO <span class="muted">/ PRACTICE</span></header>
+
+<main>
+<section id="welcome" class="card">
+  <p class="gold">MICROBIOLOGY · 80 MCQs</p>
+  <h1>Test your knowledge.</h1>
+  <p class="muted">Two parts. One exam code. One combined score.</p>
+  <p class="warning">
+    Practice only: this static website exposes its answer key.
+    The code and score are not secure, and results are not saved
+    to a private administrator dashboard.
+  </p>
+  <label for="student">Student name</label>
+  <input id="student" maxlength="80" placeholder="Enter your name">
+  <label for="code">Exam access code</label>
+  <input id="code" type="password" placeholder="Enter practice code">
+  <p class="muted">Practice code: <b>MICRO80</b></p>
+  <button class="primary" onclick="start()">Start Part 1</button>
+</section>
+
+<section id="exam" class="card hidden">
+  <p class="gold" id="part"></p>
+  <p class="muted" id="counter"></p>
+  <div class="progress"><div id="bar"></div></div>
+  <h2 id="question"></h2>
+  <div id="options"></div>
+  <div class="actions">
+    <button class="secondary" id="previous" onclick="move(-1)">Previous</button>
+    <button class="primary" id="next" onclick="move(1)">Next</button>
+  </div>
+</section>
+
+<section id="transition" class="card hidden">
+  <h2>Part 1 completed</h2>
+  <p id="partscore"></p>
+  <p>Continue to Part 2. Your answers will be combined for the final score.</p>
+  <button class="primary" onclick="beginPart2()">Start Part 2</button>
+</section>
+
+<section id="results" class="card hidden">
+  <h1 class="gold" id="greeting"></h1>
+  <h2 id="score"></h2>
+  <p id="details" class="muted"></p>
+  <button class="primary" onclick="showReview()">Review answers and explanations</button>
+  <button class="secondary" onclick="restart()">Restart</button>
+</section>
+
+<section id="review" class="card hidden">
+  <h2>Answer review</h2>
+  <div id="reviewcontent"></div>
+  <button class="secondary" onclick="show('results')">Back to result</button>
+</section>
+<footer>MedIntro · Learn with purpose</footer>
+</main>
+
+<script>
+/*
+  PRACTICE VERSION ONLY.
+  Replace the sample questions below with all 80 questions.
+  Each question needs: q, options A-D, answer, explanation.
+*/
+const ACCESS_CODE = "MICRO80";
+
+const questions = [
+  {
+    q: "Which scientist used swan-neck flasks to challenge spontaneous generation?",
+    options: {
+      A: "Robert Koch",
+      B: "Louis Pasteur",
+      C: "Joseph Lister",
+      D: "Edward Jenner"
+    },
+    answer: "B",
+    explanation: "Pasteur's swan-neck flask experiment showed that microbial growth in broth depended on contamination by microorganisms from the environment."
+  },
+  {
+    q: "Which structure is the principal target of Gram staining's iodine mordant?",
+    options: {
+      A: "Bacterial capsule",
+      B: "Ribosomal RNA",
+      C: "Crystal violet dye complex",
+      D: "Flagellar filament"
+    },
+    answer: "C",
+    explanation: "Iodine acts as a mordant, forming a crystal violet–iodine complex that is retained more effectively by Gram-positive cell walls during decolorization."
+  }
+];
+
+let studentName = "";
+let index = 0;
+let partNumber = 1;
+let answers = [];
+let examStarted = false;
+
+function show(id) {
+  ["welcome","exam","transition","results","review"].forEach(section => {
+    document.getElementById(section).classList.toggle("hidden", section !== id);
+  });
+  window.scrollTo(0,0);
+}
+
+function start() {
+  studentName = document.getElementById("student").value.trim();
+  const code = document.getElementById("code").value.trim();
+
+  if (!studentName) {
+    alert("Please enter your name.");
+    return;
+  }
+  if (code !== ACCESS_CODE) {
+    alert("Incorrect practice code.");
+    return;
+  }
+  if (questions.length < 80) {
+    alert("The website currently contains only " + questions.length +
+      " sample questions. Add the remaining questions before using the full exam.");
+  }
+  answers = Array(questions.length).fill(null);
+  index = 0;
+  partNumber = 1;
+  examStarted = true;
+  render();
+  show("exam");
+}
+
+function partStart() {
+  return partNumber === 1 ? 0 : 40;
+}
+function partEnd() {
+  return Math.min(partNumber === 1 ? 40 : 80, questions.length);
+}
+
+function render() {
+  const end = partEnd();
+  const count = end - partStart();
+  const q = questions[index];
+
+  document.getElementById("part").textContent =
+    "PART " + partNumber + " OF 2";
+  document.getElementById("counter").textContent =
+    "Question " + (index - partStart() + 1) + " of " + count;
+  document.getElementById("bar").style.width =
+    (((index - partStart() + 1) / Math.max(count,1)) * 100) + "%";
+  document.getElementById("question").textContent = q.q;
+
+  const container = document.getElementById("options");
+  container.innerHTML = "";
+
+  Object.entries(q.options).forEach(([letter, text]) => {
+    const button = document.createElement("button");
+    button.className = "option" + (answers[index] === letter ? " selected" : "");
+    button.textContent = letter + ". " + text;
+    button.onclick = () => {
+      answers[index] = letter;
+      render();
+    };
+    container.appendChild(button);
+  });
+
+  document.getElementById("previous").disabled = index === partStart();
+  document.getElementById("next").textContent =
+    index === end - 1
+      ? (partNumber === 1 ? "Finish Part 1" : "Submit exam")
+      : "Next";
+}
+
+function move(direction) {
+  const end = partEnd();
+  if (direction < 0 && index > partStart()) {
+    index--;
+    render();
+    return;
+  }
+  if (direction > 0 && index < end - 1) {
+    index++;
+    render();
+    return;
+  }
+  if (direction > 0 && index === end - 1) {
+    if (partNumber === 1) {
+      const score = scoreRange(0, Math.min(40, questions.length));
+      document.getElementById("partscore").textContent =
+        "Current Part 1 score: " + score + " / " + Math.min(40, questions.length);
+      show("transition");
+    } else {
+      finish();
+    }
+  }
+}
+
+function scoreRange(start, end) {
+  let score = 0;
+  for (let i = start; i < end; i++) {
+    if (answers[i] === questions[i].answer) score++;
+  }
+  return score;
+}
+
+function beginPart2() {
+  if (questions.length < 41) {
+    alert("Add the Part 2 questions first.");
+    return;
+  }
+  partNumber = 2;
+  index = 40;
+  render();
+  show("exam");
+}
+
+function finish() {
+  const correct = scoreRange(0, questions.length);
+  document.getElementById("greeting").textContent = "Well done, " + studentName;
+  document.getElementById("score").textContent =
+    correct + " / " + questions.length + " correct";
+  document.getElementById("details").textContent =
+    "Score: " + Math.round(correct / questions.length * 100) +
+    "%. Practice result only; not verified or stored on a server.";
+  show("results");
+}
+
+function showReview() {
+  const container = document.getElementById("reviewcontent");
+  container.innerHTML = "";
+  questions.forEach((q,i) => {
+    const div = document.createElement("div");
+    div.className = "review";
+    const h = document.createElement("h3");
+    h.textContent = (i+1) + ". " + q.q;
+    const yours = document.createElement("p");
+    yours.textContent = "Your answer: " +
+      (answers[i] ? answers[i] + ". " + q.options[answers[i]] : "Not answered");
+    const correct = document.createElement("p");
+    correct.className = "gold";
+    correct.textContent = "Correct answer: " + q.answer +
+      ". " + q.options[q.answer];
+    const explanation = document.createElement("p");
+    explanation.className = "muted";
+    explanation.textContent = q.explanation;
+    div.append(h,yours,correct,explanation);
+    container.appendChild(div);
+  });
+  show("review");
+}
+
+function restart() {
+  studentName = "";
+  index = 0;
+  partNumber = 1;
+  answers = [];
+  document.getElementById("student").value = "";
+  document.getElementById("code").value = "";
+  show("welcome");
+}
+</script>
+</body>
+</html>
+
