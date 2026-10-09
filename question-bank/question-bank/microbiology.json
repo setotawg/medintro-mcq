@@ -1,1 +1,1448 @@
-
+{
+  "examId": "microbiology_intro_bacteriology",
+  "title": "Microbiology: Introduction and General Bacteriology",
+  "subject": "Microbiology",
+  "description": "80 practice MCQs in two parts of 40 questions each.",
+  "questions": [
+    {
+      "id": "microbiology_intro_bacteriology_1",
+      "subject": "Microbiology",
+      "number": 1,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Introduction & scope",
+      "question": "A laboratory team studies microbial metabolism, transmission, pathogenesis, identification, treatment, and prevention. Which description best captures the scope of their discipline?",
+      "options": {
+        "A": "The study of visible organisms only",
+        "B": "The study of microorganisms and their biological and medical relationships",
+        "C": "The study of infectious diseases without studying their agents",
+        "D": "The study of human immunity alone"
+      },
+      "answer": "B",
+      "explanation": "Medical microbiology examines medically important microorganisms and includes their structure, growth, metabolism, genetics, transmission, pathogenesis, identification, treatment, and prevention.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_2",
+      "subject": "Microbiology",
+      "number": 2,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "History",
+      "question": "A researcher uses a simple microscope to observe living bacteria, protozoa, and yeasts, but cannot observe viruses. Which historical figure best matches this work?",
+      "options": {
+        "A": "Robert Koch",
+        "B": "Joseph Lister",
+        "C": "Anton van Leeuwenhoek",
+        "D": "Louis Pasteur"
+      },
+      "answer": "C",
+      "explanation": "Leeuwenhoek used high-quality simple lenses to observe living microorganisms, including bacteria, protozoa, and yeasts; viruses were beyond the resolving capability of his microscopes.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_3",
+      "subject": "Microbiology",
+      "number": 3,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Spontaneous generation",
+      "question": "A student claims that maggots arise directly from rotting meat. Which experimental observation most directly challenges this claim?",
+      "options": {
+        "A": "Maggots grow faster at higher temperatures",
+        "B": "Maggots appear on gauze covering meat but not on the meat when flies are excluded",
+        "C": "Meat decomposes when kept in darkness",
+        "D": "Meat contains nutrients for microbial growth"
+      },
+      "answer": "B",
+      "explanation": "Redi showed that when flies could not reach the meat, maggots did not develop on the meat; larvae were associated with fly access and egg deposition.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_4",
+      "subject": "Microbiology",
+      "number": 4,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Spontaneous generation",
+      "question": "Why did critics initially object to Spallanzani’s sealed, boiled-broth experiment?",
+      "options": {
+        "A": "They argued that broth contained no nutrients",
+        "B": "They argued that boiling created microorganisms",
+        "C": "They argued that air was necessary for life and had been excluded",
+        "D": "They argued that the container was too large"
+      },
+      "answer": "C",
+      "explanation": "Critics argued that the absence of growth resulted from lack of air rather than prevention of contamination, leaving the question unresolved until Pasteur’s design.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_5",
+      "subject": "Microbiology",
+      "number": 5,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Pasteur experiment",
+      "question": "Which feature made Pasteur’s swan-neck flask especially effective against the criticism of Spallanzani’s experiment?",
+      "options": {
+        "A": "It prevented air from entering the flask",
+        "B": "It allowed air to enter while trapping contaminating particles in the curved neck",
+        "C": "It continuously heated the broth",
+        "D": "It contained an antimicrobial chemical"
+      },
+      "answer": "B",
+      "explanation": "The curved neck permitted free diffusion of air while particles carrying microorganisms were trapped in the bend, addressing the argument that air itself was required.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_6",
+      "subject": "Microbiology",
+      "number": 6,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Pasteur experiment",
+      "question": "A swan-neck flask remains clear while upright but becomes cloudy after broth is tipped into the neck and returned to the flask. What is the strongest inference?",
+      "options": {
+        "A": "Air spontaneously creates microorganisms when broth is moved",
+        "B": "Broth cannot support bacterial growth unless tilted",
+        "C": "Microorganisms in the environment contaminate the broth; they are not spontaneously generated by air",
+        "D": "Boiling broth permanently removes all nutrients"
+      },
+      "answer": "C",
+      "explanation": "Tilting allows broth to contact trapped contaminants in the neck, after which growth occurs; this supports contamination from pre-existing microorganisms rather than spontaneous generation.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_7",
+      "subject": "Microbiology",
+      "number": 7,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Contributions",
+      "question": "A surgeon introduces chemical treatment of wounds using phenol to reduce infections during surgery. Which historical figure is most closely associated with this development?",
+      "options": {
+        "A": "Joseph Lister",
+        "B": "Anton van Leeuwenhoek",
+        "C": "Robert Koch",
+        "D": "Aristotle"
+      },
+      "answer": "A",
+      "explanation": "Lister applied germ-theory concepts to antiseptic surgery and popularized chemical inhibition of infection, including the use of phenol on surgical wounds.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_8",
+      "subject": "Microbiology",
+      "number": 8,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Germ theory",
+      "question": "Which statement most accurately represents the germ theory of disease?",
+      "options": {
+        "A": "All illnesses are caused by bacteria",
+        "B": "Many diseases are caused by microorganisms",
+        "C": "Microorganisms cause disease only after death",
+        "D": "Disease is caused by invisible spirits rather than biological agents"
+      },
+      "answer": "B",
+      "explanation": "Germ theory proposes that microorganisms cause many diseases; it does not claim that every disease is infectious or that all pathogens are bacteria.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_9",
+      "subject": "Microbiology",
+      "number": 9,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Koch's postulates",
+      "question": "Which sequence most closely follows the logic of Koch’s postulates?",
+      "options": {
+        "A": "Treat disease, identify symptoms, vaccinate, culture blood",
+        "B": "Observe an organism in disease, isolate and culture it, introduce it into a healthy susceptible host, reproduce disease, then reisolate it",
+        "C": "Observe an organism in a healthy host, destroy it, and infer causation",
+        "D": "Culture any organism and assume it causes the disease"
+      },
+      "answer": "B",
+      "explanation": "The classic sequence links a candidate organism to disease by observation, isolation/culture, reproduction of disease in a susceptible host, and reisolation of the same organism.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_10",
+      "subject": "Microbiology",
+      "number": 10,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Koch's postulates",
+      "question": "A suspected pathogen is repeatedly associated with disease, but it cannot be grown on artificial media. Which limitation of Koch’s postulates does this illustrate?",
+      "options": {
+        "A": "All pathogens must be viruses",
+        "B": "Some microorganisms are difficult or impossible to cultivate in the laboratory",
+        "C": "Microorganisms cannot be isolated from diseased hosts",
+        "D": "Disease can only be studied in plants"
+      },
+      "answer": "B",
+      "explanation": "The classical postulates rely on isolation and laboratory cultivation, which is not feasible for certain organisms, such as those noted in the course material.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_11",
+      "subject": "Microbiology",
+      "number": 11,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Koch's postulates",
+      "question": "A microorganism is found in many healthy people without symptoms. Which conclusion best reflects a limitation of the classical postulates?",
+      "options": {
+        "A": "The organism must be harmless in every host",
+        "B": "The organism cannot ever cause disease",
+        "C": "Presence of an organism alone may not establish that it causes disease in every carrier",
+        "D": "The organism must be a fungus"
+      },
+      "answer": "C",
+      "explanation": "Asymptomatic carriage means a pathogen may be present without disease, so the simple rule that it is found only in diseased individuals does not always hold.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_12",
+      "subject": "Microbiology",
+      "number": 12,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Koch's postulates",
+      "question": "Which situation creates an ethical barrier to testing Koch’s postulates directly in humans?",
+      "options": {
+        "A": "The organism has a distinctive shape",
+        "B": "A healthy human volunteer would need to be deliberately infected with a dangerous pathogen",
+        "C": "The organism grows rapidly on agar",
+        "D": "The organism can be stained by Gram stain"
+      },
+      "answer": "B",
+      "explanation": "Deliberately infecting a person with a pathogen can be ethically unacceptable, especially when humans are the only suitable host.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_13",
+      "subject": "Microbiology",
+      "number": 13,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Distribution",
+      "question": "Which combination best explains why microorganisms are widely distributed in air, water, soil, and living bodies?",
+      "options": {
+        "A": "Large size, slow reproduction, and narrow metabolism",
+        "B": "Small size, diverse forms, rapid reproduction, adaptability, easy transmission, and diverse metabolism",
+        "C": "Dependence on a single nutrient and one environmental condition",
+        "D": "Inability to survive unfavorable conditions"
+      },
+      "answer": "B",
+      "explanation": "The material identifies small size, forms such as spores or cysts, adaptability, rapid reproduction, transmission, and metabolic diversity as factors supporting widespread distribution.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_14",
+      "subject": "Microbiology",
+      "number": 14,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Applied microbiology",
+      "question": "A biotechnology laboratory uses yeast and bacteria to investigate basic biochemical pathways. Which advantage most directly supports their use as model organisms?",
+      "options": {
+        "A": "They never mutate",
+        "B": "They reproduce rapidly and have relatively simple genetics and biochemistry",
+        "C": "They are all harmless to humans",
+        "D": "They lack genetic material"
+      },
+      "answer": "B",
+      "explanation": "Rapid reproduction and comparatively simple genetic and biochemical systems make bacteria and yeast useful for studying fundamental life processes.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_15",
+      "subject": "Microbiology",
+      "number": 15,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Applied microbiology",
+      "question": "A factory uses microorganisms to break down toxic waste materials. Which application is being demonstrated?",
+      "options": {
+        "A": "Bioremediation",
+        "B": "Phage typing",
+        "C": "Antiseptic surgery",
+        "D": "Serological agglutination"
+      },
+      "answer": "A",
+      "explanation": "Bioremediation uses microorganisms to degrade or remove toxic waste materials and is an ecological application of microbiology.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_16",
+      "subject": "Microbiology",
+      "number": 16,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Yeast metabolism",
+      "question": "Dough rises after yeast is added and supplied with sugar and oxygen. Which process described in the course material is most directly associated with this use?",
+      "options": {
+        "A": "Anaerobic production of ethanol only",
+        "B": "Aerobic respiration producing carbon dioxide",
+        "C": "Photosynthesis using chlorophyll",
+        "D": "Binary fission of yeast cells alone"
+      },
+      "answer": "B",
+      "explanation": "The material describes aerobic respiration by yeast using sugar in dough, producing carbon dioxide that helps the bread rise.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_17",
+      "subject": "Microbiology",
+      "number": 17,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Yeast metabolism",
+      "question": "A brewer limits oxygen availability so yeast converts sugar into ethanol and carbon dioxide. Which process is occurring?",
+      "options": {
+        "A": "Fermentation through anaerobic respiration",
+        "B": "Photosynthesis",
+        "C": "Biogenesis of bacteria",
+        "D": "Oxidative sterilization"
+      },
+      "answer": "A",
+      "explanation": "In the absence of oxygen, yeast converts sugar into ethanol and carbon dioxide; the material identifies this as fermentation.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_18",
+      "subject": "Microbiology",
+      "number": 18,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Chain of infection",
+      "question": "A nurse breaks one essential link in the chain of infection by performing hand hygiene before patient contact. What is the most accurate general interpretation?",
+      "options": {
+        "A": "Every other link automatically disappears",
+        "B": "Transmission can be interrupted even if the infectious agent remains in its reservoir",
+        "C": "The pathogen is necessarily eradicated from the environment",
+        "D": "The susceptible host becomes permanently immune"
+      },
+      "answer": "B",
+      "explanation": "The chain of infection requires connected events; interrupting transmission can prevent spread without eliminating the agent from every reservoir.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_19",
+      "subject": "Microbiology",
+      "number": 19,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Source of infection",
+      "question": "A patient develops an infection caused by microorganisms normally present on their own skin after a procedure breaches the barrier. How is the source best classified?",
+      "options": {
+        "A": "Exogenous",
+        "B": "Endogenous",
+        "C": "Vector-borne",
+        "D": "Vehicle-borne"
+      },
+      "answer": "B",
+      "explanation": "An endogenous infection originates from the person’s own normal flora when conditions allow those organisms to cause disease.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_20",
+      "subject": "Microbiology",
+      "number": 20,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Source of infection",
+      "question": "A healthcare worker carries bacteria from one patient to another on unclean hands. The source of the organisms for the second patient is best described as:",
+      "options": {
+        "A": "Endogenous only",
+        "B": "Exogenous",
+        "C": "A genetically inherited infection",
+        "D": "Spontaneous generation"
+      },
+      "answer": "B",
+      "explanation": "The organisms are introduced from outside the second patient, making this an exogenous source; contaminated healthcare-worker hands can carry them between patients.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_21",
+      "subject": "Microbiology",
+      "number": 21,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Reservoir",
+      "question": "Which option is the best definition of a microbial reservoir?",
+      "options": {
+        "A": "The route by which an organism enters a host",
+        "B": "A place where a microorganism lives, grows, and reproduces",
+        "C": "The symptom caused by microbial toxins",
+        "D": "A laboratory method for staining bacteria"
+      },
+      "answer": "B",
+      "explanation": "Reservoirs are places in which microorganisms grow and reproduce; examples include humans, animals, food, water, soil, and healthcare equipment.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_22",
+      "subject": "Microbiology",
+      "number": 22,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Portal of exit",
+      "question": "A person with an intestinal infection contaminates the surrounding environment while defecating. Which portal of exit is involved?",
+      "options": {
+        "A": "Respiratory tract",
+        "B": "Gastrointestinal tract",
+        "C": "Genitourinary tract",
+        "D": "Intact skin only"
+      },
+      "answer": "B",
+      "explanation": "Feces and vomitus are routes by which microorganisms can leave a reservoir through the gastrointestinal tract.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_23",
+      "subject": "Microbiology",
+      "number": 23,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Transmission",
+      "question": "A susceptible host acquires an organism through sexual intercourse with an infected person. Under the classification used in the material, this is:",
+      "options": {
+        "A": "Direct transmission",
+        "B": "Indirect vehicle transmission",
+        "C": "Indirect vector transmission",
+        "D": "Airborne transmission only"
+      },
+      "answer": "A",
+      "explanation": "Sexual intercourse is listed as direct transmission because the agent passes through immediate contact between the source and susceptible host.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_24",
+      "subject": "Microbiology",
+      "number": 24,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Transmission",
+      "question": "A contaminated towel transfers a microorganism from one person to another. This is best classified as:",
+      "options": {
+        "A": "Direct transmission",
+        "B": "Indirect transmission through a fomite",
+        "C": "Vertical transmission only",
+        "D": "Endogenous infection"
+      },
+      "answer": "B",
+      "explanation": "A towel is an inanimate intermediary, or fomite, and therefore represents indirect transmission.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_25",
+      "subject": "Microbiology",
+      "number": 25,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Transmission",
+      "question": "A mosquito carries an infectious agent between hosts. Which route is involved?",
+      "options": {
+        "A": "Vehicle-borne transmission",
+        "B": "Vector-borne transmission",
+        "C": "Direct contact transmission",
+        "D": "Transplacental transmission"
+      },
+      "answer": "B",
+      "explanation": "A vector is a living intermediary such as a mosquito, flea, or tick that carries an infectious agent between hosts.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_26",
+      "subject": "Microbiology",
+      "number": 26,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Transmission",
+      "question": "Which example most clearly represents vehicle-borne transmission rather than vector-borne transmission?",
+      "options": {
+        "A": "A mosquito transmits a parasite",
+        "B": "A tick carries an infectious agent",
+        "C": "A person drinks contaminated water",
+        "D": "An infected person touches another person"
+      },
+      "answer": "C",
+      "explanation": "Water is an inanimate vehicle that carries the infectious agent; mosquitoes and ticks are living vectors.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_27",
+      "subject": "Microbiology",
+      "number": 27,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Portal of entry",
+      "question": "Bacteria travel upward along an indwelling urinary catheter and enter the bladder. Which portal of entry is most directly involved?",
+      "options": {
+        "A": "Respiratory tract",
+        "B": "Gastrointestinal tract",
+        "C": "Genitourinary tract",
+        "D": "Transplacental route"
+      },
+      "answer": "C",
+      "explanation": "The material describes bacteria ascending a urinary catheter into the bladder as entry through the genitourinary tract.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_28",
+      "subject": "Microbiology",
+      "number": 28,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Classification",
+      "question": "A classification system groups organisms by convenient observable traits even when those traits do not necessarily indicate evolutionary relatedness. Which system is this?",
+      "options": {
+        "A": "Phylogenetic",
+        "B": "Phenetic",
+        "C": "Genotypic",
+        "D": "Analytic"
+      },
+      "answer": "B",
+      "explanation": "Phenetic classification groups organisms by observable or convenient characteristics; phylogenetic classification aims to reflect genetic similarity and evolutionary relationships.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_29",
+      "subject": "Microbiology",
+      "number": 29,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Classification",
+      "question": "Two microorganisms are grouped together because molecular evidence indicates close genetic and evolutionary relatedness, despite some visible differences. Which approach is most appropriate?",
+      "options": {
+        "A": "Phenetic classification only",
+        "B": "Phylogenetic classification",
+        "C": "Classification by colony color only",
+        "D": "Classification by habitat alone"
+      },
+      "answer": "B",
+      "explanation": "Phylogenetic classification is intended to reflect genetic similarity and evolutionary relatedness rather than relying only on observable traits.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_30",
+      "subject": "Microbiology",
+      "number": 30,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Cell types",
+      "question": "A microorganism has no membrane-bound nucleus, usually circular DNA, 70S ribosomes, and no mitochondria. Which cellular organization does it have?",
+      "options": {
+        "A": "Eukaryotic",
+        "B": "Prokaryotic",
+        "C": "Acellular viral particle",
+        "D": "Multicellular animal cell"
+      },
+      "answer": "B",
+      "explanation": "These are core features of prokaryotes: a nucleoid rather than a membrane-bound nucleus, usually circular DNA, 70S ribosomes, and absence of membrane-bound organelles.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_31",
+      "subject": "Microbiology",
+      "number": 31,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Cell types",
+      "question": "Which feature most strongly distinguishes a eukaryotic cell from a typical bacterial cell?",
+      "options": {
+        "A": "Presence of ribosomes",
+        "B": "Presence of DNA",
+        "C": "A membrane-bound nucleus containing linear chromosomes",
+        "D": "Ability to synthesize proteins"
+      },
+      "answer": "C",
+      "explanation": "Eukaryotes have a membrane-bound nucleus with linear chromosomes, whereas bacterial DNA is typically circular and located in the nucleoid.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_32",
+      "subject": "Microbiology",
+      "number": 32,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Domains",
+      "question": "A student attempts to place a virus into one of the three domains: Bacteria, Archaea, or Eukarya. What is the best response?",
+      "options": {
+        "A": "Viruses belong to Eukarya because they contain nucleic acid",
+        "B": "Viruses belong to Archaea because they are ancient",
+        "C": "Viruses are acellular and do not fit within the three-domain system",
+        "D": "Viruses are a fourth cellular domain in this system"
+      },
+      "answer": "C",
+      "explanation": "The material describes viruses as acellular and outside the three-domain system, which classifies cellular life as Bacteria, Archaea, and Eukarya.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_33",
+      "subject": "Microbiology",
+      "number": 33,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Microbial groups",
+      "question": "An organism contains chlorophyll, has a cell wall, and performs photosynthesis. Which group best fits the description used in the material?",
+      "options": {
+        "A": "Protozoa",
+        "B": "Fungi",
+        "C": "Algae",
+        "D": "Bacteria only"
+      },
+      "answer": "C",
+      "explanation": "Algae are described as chlorophyll-containing, photosynthetic eukaryotes with cell walls.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_34",
+      "subject": "Microbiology",
+      "number": 34,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Microbial groups",
+      "question": "A colorless eukaryotic microorganism ingests organic particles and lacks a cell wall. Which group is most consistent with these characteristics?",
+      "options": {
+        "A": "Algae",
+        "B": "Protozoa",
+        "C": "Fungi",
+        "D": "Archaea"
+      },
+      "answer": "B",
+      "explanation": "Protozoa are described as colorless organisms that ingest other organisms or organic particles and lack a cell wall.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_35",
+      "subject": "Microbiology",
+      "number": 35,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Identification",
+      "question": "A laboratory uses the reaction of a bacterial isolate with antibodies specific to its antigens, producing visible clumping. Which identification method is being used?",
+      "options": {
+        "A": "Phage typing",
+        "B": "Serological agglutination",
+        "C": "Fatty-acid profiling",
+        "D": "Morphological classification"
+      },
+      "answer": "B",
+      "explanation": "Specific antibodies bind their corresponding bacterial antigens and can produce agglutination, making this a serological method.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_36",
+      "subject": "Microbiology",
+      "number": 36,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Identification",
+      "question": "A bacterium is exposed to a bacteriophage known to infect a specific bacterial type; a clear plaque forms where bacterial cells are destroyed. Which method is demonstrated?",
+      "options": {
+        "A": "Acid-fast staining",
+        "B": "Phage typing",
+        "C": "Biochemical fermentation testing",
+        "D": "Ribosomal RNA sequencing"
+      },
+      "answer": "B",
+      "explanation": "Phage typing exploits the specificity of bacteriophages for certain bacteria; susceptible cells are destroyed, creating plaques in the bacterial lawn.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_37",
+      "subject": "Microbiology",
+      "number": 37,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Identification",
+      "question": "A laboratory compares ribosomal RNA sequences to determine evolutionary relationships among isolates. Which type of evidence is being used?",
+      "options": {
+        "A": "Morphological only",
+        "B": "Molecular technique",
+        "C": "Macroscopic colony appearance only",
+        "D": "Direct contact tracing"
+      },
+      "answer": "B",
+      "explanation": "Ribosomal RNA sequencing is a molecular approach used to classify microorganisms by genetic relatedness.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_38",
+      "subject": "Microbiology",
+      "number": 38,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Identification",
+      "question": "A Gram stain is performed on a clinical specimen. Which set of findings should be included in the report according to the material?",
+      "options": {
+        "A": "Patient age, drug dose, and prognosis",
+        "B": "Number of bacteria, Gram reaction, morphology, and intra-/extracellular location",
+        "C": "Only the color of the counterstain",
+        "D": "Only whether the culture is positive"
+      },
+      "answer": "B",
+      "explanation": "The material specifies bacterial quantity, Gram reaction, morphology, and whether organisms are intracellular or extracellular as reporting elements.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_39",
+      "subject": "Microbiology",
+      "number": 39,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Koch's postulates",
+      "question": "Which example shows why the classical postulates cannot be applied mechanically to every disease?",
+      "options": {
+        "A": "A pure culture is obtained from a pathogen",
+        "B": "A disease has a single identifiable bacterial cause",
+        "C": "A disease results from mixed infection involving more than one microorganism",
+        "D": "The organism can be observed microscopically"
+      },
+      "answer": "C",
+      "explanation": "Mixed infections challenge a framework designed to link one specific microbe to one specific disease.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_40",
+      "subject": "Microbiology",
+      "number": 40,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Bacterial structure",
+      "question": "A bacterial cell has surface appendages, a cell envelope, and a cytoplasmic region containing DNA and ribosomes. Which structure-function pairing is correct?",
+      "options": {
+        "A": "Pili—protein synthesis",
+        "B": "Flagella—locomotion",
+        "C": "Ribosomes—DNA storage only",
+        "D": "Capsule—binary fission"
+      },
+      "answer": "B",
+      "explanation": "Flagella are protein appendages that provide motility; pili are mainly involved in attachment and conjugation, while ribosomes synthesize proteins.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_41",
+      "subject": "Microbiology",
+      "number": 41,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Pili",
+      "question": "A donor bacterium transfers genetic material to a recipient through direct cell-to-cell contact. Which structure most directly facilitates the contact described?",
+      "options": {
+        "A": "Flagellum",
+        "B": "Conjugation pilus",
+        "C": "Capsule",
+        "D": "Endospore coat"
+      },
+      "answer": "B",
+      "explanation": "Conjugation pili connect donor and recipient bacteria and facilitate one-way transfer of DNA from donor to recipient.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_42",
+      "subject": "Microbiology",
+      "number": 42,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Flagella",
+      "question": "A bacterium has a single flagellum at one pole. Which arrangement is described?",
+      "options": {
+        "A": "Lophotrichous",
+        "B": "Amphitrichous",
+        "C": "Monotrichous",
+        "D": "Peritrichous"
+      },
+      "answer": "C",
+      "explanation": "Monotrichous means one flagellum at one end; lophotrichous means a tuft at one end, amphitrichous means at both ends, and peritrichous means distributed around the cell.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_43",
+      "subject": "Microbiology",
+      "number": 43,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Flagella",
+      "question": "A bacterial isolate has flagella at both ends of the cell. Which arrangement should be recorded?",
+      "options": {
+        "A": "Peritrichous",
+        "B": "Amphitrichous",
+        "C": "Monotrichous",
+        "D": "Lophotrichous"
+      },
+      "answer": "B",
+      "explanation": "Amphitrichous describes flagella at both ends of a bacterial cell.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_44",
+      "subject": "Microbiology",
+      "number": 44,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Capsule",
+      "question": "Compared with a slime layer, a capsule is best described as:",
+      "options": {
+        "A": "Loosely organized and weakly attached",
+        "B": "Highly organized and tightly attached",
+        "C": "Composed exclusively of DNA",
+        "D": "Located inside the nucleoid"
+      },
+      "answer": "B",
+      "explanation": "The glycocalyx may occur as a capsule, which is organized and tightly attached, or as a loosely organized slime layer.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_45",
+      "subject": "Microbiology",
+      "number": 45,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Capsule & virulence",
+      "question": "A bacterial mutant loses its capsule but retains the ability to grow in nutrient broth. Which outcome is most consistent with the capsule's functions?",
+      "options": {
+        "A": "The organism necessarily cannot synthesize proteins",
+        "B": "It may become less able to resist host defenses or adhere, despite continued growth",
+        "C": "It must become a virus",
+        "D": "It will lose its chromosome"
+      },
+      "answer": "B",
+      "explanation": "The capsule is not essential for growth under all conditions but contributes to adhesion, protection from white-cell killing, biofilm formation, and virulence.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_46",
+      "subject": "Microbiology",
+      "number": 46,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Biofilm",
+      "question": "Bacteria in a dental plaque persist despite host defenses and antimicrobial exposure. Which feature best explains this persistence in the material?",
+      "options": {
+        "A": "The biofilm provides protection from antibiotics and host defenses",
+        "B": "The bacteria have no cell wall",
+        "C": "The bacteria are unable to attach to surfaces",
+        "D": "The bacteria are all obligate anaerobes"
+      },
+      "answer": "A",
+      "explanation": "The material identifies biofilm as a protective community associated with surfaces, such as dental plaque, that can reduce susceptibility to antibiotics and host defenses.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_47",
+      "subject": "Microbiology",
+      "number": 47,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Cell wall",
+      "question": "Why are bacterial cell-wall synthesis pathways important targets for antimicrobial drugs?",
+      "options": {
+        "A": "Cell walls are identical to human mitochondrial membranes",
+        "B": "Cell walls contain distinctive components and are crucial for bacterial growth and division",
+        "C": "Cell walls are present in every virus",
+        "D": "Cell walls are the only site of bacterial DNA"
+      },
+      "answer": "B",
+      "explanation": "Bacterial cell walls contain unique structures such as peptidoglycan and are essential for viability, making their synthesis useful for selective antimicrobial targeting.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_48",
+      "subject": "Microbiology",
+      "number": 48,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Peptidoglycan",
+      "question": "Which description best explains the mechanical rigidity of the bacterial cell wall?",
+      "options": {
+        "A": "A layer of cholesterol crystals",
+        "B": "Linear polysaccharide chains cross-linked by peptides",
+        "C": "A double-stranded RNA shell",
+        "D": "A membrane made only of phospholipids"
+      },
+      "answer": "B",
+      "explanation": "Peptidoglycan consists of linear amino-sugar chains cross-linked by short peptides, providing strength and rigidity.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_49",
+      "subject": "Microbiology",
+      "number": 49,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Gram-positive wall",
+      "question": "Which combination is most characteristic of a Gram-positive bacterial cell wall?",
+      "options": {
+        "A": "Thin peptidoglycan, outer membrane, and LPS",
+        "B": "Thick peptidoglycan with teichoic acids and no outer membrane",
+        "C": "No peptidoglycan and no cell membrane",
+        "D": "Waxy mycolic acids as the defining feature of all Gram-positive bacteria"
+      },
+      "answer": "B",
+      "explanation": "Gram-positive bacteria have thick peptidoglycan and commonly contain teichoic and lipoteichoic acids; they lack the Gram-negative outer membrane containing LPS.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_50",
+      "subject": "Microbiology",
+      "number": 50,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Gram-negative wall",
+      "question": "A bacterial envelope contains an outer membrane, thin peptidoglycan, and a periplasmic space with beta-lactamase. Which group is most likely?",
+      "options": {
+        "A": "Gram-positive bacteria",
+        "B": "Gram-negative bacteria",
+        "C": "Bacteria lacking cell walls",
+        "D": "Eukaryotic fungi"
+      },
+      "answer": "B",
+      "explanation": "The material describes Gram-negative bacteria as having thin peptidoglycan, an outer membrane, and a periplasmic space that can contain hydrolytic enzymes including beta-lactamase.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_51",
+      "subject": "Microbiology",
+      "number": 51,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "LPS",
+      "question": "A component of the outer membrane triggers a powerful inflammatory response and is associated with fever and shock. Which molecule is responsible, and which part is toxic?",
+      "options": {
+        "A": "Teichoic acid; the sugar chain",
+        "B": "LPS; Lipid A",
+        "C": "Peptidoglycan; N-acetylglucosamine only",
+        "D": "Flagellin; the H antigen"
+      },
+      "answer": "B",
+      "explanation": "LPS is also called endotoxin; its Lipid A component is the toxic part and can stimulate cytokine release associated with fever and shock.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_52",
+      "subject": "Microbiology",
+      "number": 52,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "LPS",
+      "question": "Which LPS component is especially useful for distinguishing antigenic variants of bacteria?",
+      "options": {
+        "A": "Lipid A",
+        "B": "Core polysaccharide only",
+        "C": "O antigen",
+        "D": "Peptidoglycan cross-links"
+      },
+      "answer": "C",
+      "explanation": "The O antigen contributes antigenic variation and is useful in bacterial typing, whereas Lipid A is the toxic component.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_53",
+      "subject": "Microbiology",
+      "number": 53,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Acid-fast cell wall",
+      "question": "A bacterial isolate resists drying and many chemicals and stains poorly with routine Gram stain. Its wall contains abundant waxy lipid. Which component best explains these properties?",
+      "options": {
+        "A": "Teichoic acid",
+        "B": "Mycolic acid",
+        "C": "Flagellin",
+        "D": "Ribosomal RNA"
+      },
+      "answer": "B",
+      "explanation": "Mycobacterial cell walls contain waxy mycolic acids, which contribute to acid-fastness, resistance to desiccation and some antimicrobial effects, and pathogenicity.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_54",
+      "subject": "Microbiology",
+      "number": 54,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Cell wall absence",
+      "question": "Which organism is specifically identified in the material as lacking a conventional bacterial cell wall?",
+      "options": {
+        "A": "Mycoplasma species",
+        "B": "Bacillus anthracis",
+        "C": "Corynebacterium diphtheriae",
+        "D": "Mycobacterium tuberculosis"
+      },
+      "answer": "A",
+      "explanation": "Mycoplasma species are listed among bacteria lacking a cell wall, along with L-forms, spheroplasts, and protoplasts.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_55",
+      "subject": "Microbiology",
+      "number": 55,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Ribosomes",
+      "question": "A drug selectively interferes with bacterial protein synthesis by acting on the bacterial ribosome. Which ribosomal size is typical of bacteria?",
+      "options": {
+        "A": "80S, made of 60S and 40S subunits",
+        "B": "70S, made of 50S and 30S subunits",
+        "C": "90S, made of 60S and 30S subunits",
+        "D": "60S, made of 40S and 20S subunits"
+      },
+      "answer": "B",
+      "explanation": "Bacterial ribosomes are 70S, composed of 50S and 30S subunits; eukaryotic cytoplasmic ribosomes are typically 80S.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_56",
+      "subject": "Microbiology",
+      "number": 56,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Plasmids",
+      "question": "A bacterial isolate rapidly acquires a resistance determinant carried on a small circular DNA molecule that replicates independently of the chromosome. What is the most likely genetic element?",
+      "options": {
+        "A": "Nucleoid chromosome",
+        "B": "Plasmid",
+        "C": "Ribosome",
+        "D": "Endospore"
+      },
+      "answer": "B",
+      "explanation": "Plasmids are small circular double-stranded DNA molecules that may carry antibiotic-resistance genes, toxins, or enzymes and can be transferred between cells.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_57",
+      "subject": "Microbiology",
+      "number": 57,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Taxonomy",
+      "question": "A laboratory assigns a standardized two-part scientific name to an isolate. Which rule is correct?",
+      "options": {
+        "A": "Both genus and species begin with capital letters",
+        "B": "The genus is capitalized, the specific epithet is lowercase, and the full name is italicized or underlined",
+        "C": "Only the species epithet is written in italics",
+        "D": "The name must describe the patient's symptoms"
+      },
+      "answer": "B",
+      "explanation": "Binomial nomenclature uses a genus name followed by a specific epithet; the genus begins with a capital letter, the epithet is lowercase, and the full name is italicized or underlined.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_58",
+      "subject": "Microbiology",
+      "number": 58,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Classification",
+      "question": "Which method is genotypic rather than phenotypic?",
+      "options": {
+        "A": "Colony morphology",
+        "B": "Gram reaction",
+        "C": "Guanine-cytosine ratio analysis",
+        "D": "Carbohydrate fermentation profile"
+      },
+      "answer": "C",
+      "explanation": "Guanine-cytosine ratio, nucleic-acid sequence, plasmid, ribotyping, and chromosomal DNA analyses are genotypic methods.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_59",
+      "subject": "Microbiology",
+      "number": 59,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Gram stain",
+      "question": "After Gram staining, a bacterium appears pink. Which cell-envelope feature best explains this result?",
+      "options": {
+        "A": "A thick peptidoglycan layer retains crystal violet",
+        "B": "A thin peptidoglycan layer and outer membrane permit decolorization before counterstaining",
+        "C": "A complete absence of a plasma membrane",
+        "D": "A capsule converts crystal violet into safranin"
+      },
+      "answer": "B",
+      "explanation": "Gram-negative bacteria are decolorized by alcohol because of their envelope structure and then take up the pink/red counterstain.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_60",
+      "subject": "Microbiology",
+      "number": 60,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Acid-fast staining",
+      "question": "A sputum smear is treated with carbol-fuchsin, acid-alcohol, and methylene blue. Acid-fast bacilli remain pink against a contrasting background. What explains this retention?",
+      "options": {
+        "A": "Their peptidoglycan is always thicker than Gram-positive bacteria",
+        "B": "Their lipid-rich, mycolic-acid-containing wall retains the primary dye despite acid-alcohol",
+        "C": "They contain chlorophyll",
+        "D": "Their ribosomes bind carbol-fuchsin"
+      },
+      "answer": "B",
+      "explanation": "The lipid-rich mycobacterial wall containing mycolic acid gives acid-fastness, allowing organisms to retain carbol-fuchsin after acid-alcohol decolorization.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_61",
+      "subject": "Microbiology",
+      "number": 61,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "AFB grading",
+      "question": "A technician observes 6 acid-fast bacilli across 100 high-power fields. Using the scale presented in the course material, how should this be graded?",
+      "options": {
+        "A": "Negative",
+        "B": "Scanty",
+        "C": "1+",
+        "D": "2+"
+      },
+      "answer": "B",
+      "explanation": "The scale defines scanty as 1–9 AFB per 100 high-power fields; 10–99 per 100 fields is 1+.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_62",
+      "subject": "Microbiology",
+      "number": 62,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Morphology",
+      "question": "A Gram-positive coccus forms grape-like irregular clusters. Which arrangement is most consistent with this observation?",
+      "options": {
+        "A": "Streptococci",
+        "B": "Staphylococci",
+        "C": "Diplococci",
+        "D": "Spirochaetes"
+      },
+      "answer": "B",
+      "explanation": "Staphylococci are cocci arranged in irregular grape-like clusters, while streptococci typically form chains and diplococci occur in pairs.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_63",
+      "subject": "Microbiology",
+      "number": 63,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Morphology",
+      "question": "A rod-shaped bacterium remains attached at angles, producing a Chinese-letter appearance. Which organism is the example associated with this morphology?",
+      "options": {
+        "A": "Corynebacterium diphtheriae",
+        "B": "Vibrio cholerae",
+        "C": "Staphylococcus aureus",
+        "D": "Neisseria meningitidis"
+      },
+      "answer": "A",
+      "explanation": "Corynebacterium diphtheriae is described as bacilli attached at various angles resembling Chinese letters.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_64",
+      "subject": "Microbiology",
+      "number": 64,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Morphology",
+      "question": "A small, slightly curved Gram-negative rod is observed. Which bacterial shape category best fits?",
+      "options": {
+        "A": "Spirillum",
+        "B": "Vibrio",
+        "C": "Spirochaete",
+        "D": "Coccus"
+      },
+      "answer": "B",
+      "explanation": "Vibrios are small, slightly curved rods and are described as Gram-negative; Vibrio cholerae is a representative example.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_65",
+      "subject": "Microbiology",
+      "number": 65,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Morphology",
+      "question": "An organism is flexible, coiled, motile, and difficult to stain by the Gram method. Which group is most consistent?",
+      "options": {
+        "A": "Spirilla",
+        "B": "Spirochaetes",
+        "C": "Staphylococci",
+        "D": "Coccobacilli"
+      },
+      "answer": "B",
+      "explanation": "Spirochaetes are flexible coiled motile organisms with rapid body movements and are often not easily stained by Gram methods.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_66",
+      "subject": "Microbiology",
+      "number": 66,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Nutrition",
+      "question": "A bacterium obtains carbon from inorganic carbon dioxide rather than depending on organic compounds. Which nutritional category best describes it?",
+      "options": {
+        "A": "Heterotroph",
+        "B": "Autotroph",
+        "C": "Obligate anaerobe",
+        "D": "Psychrophile"
+      },
+      "answer": "B",
+      "explanation": "Autotrophs use inorganic compounds such as CO2 as a carbon source, whereas heterotrophs depend on organic compounds.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_67",
+      "subject": "Microbiology",
+      "number": 67,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Temperature",
+      "question": "A bacterial species grows best at 60°C. According to the temperature ranges given, which group best fits?",
+      "options": {
+        "A": "Psychrophile",
+        "B": "Mesophile",
+        "C": "Thermophile",
+        "D": "Neutrophile"
+      },
+      "answer": "C",
+      "explanation": "The listed thermophile range is approximately 45–75°C; hyperthermophiles grow at still higher temperatures.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_68",
+      "subject": "Microbiology",
+      "number": 68,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Oxygen requirements",
+      "question": "A bacterium can grow using aerobic respiration when oxygen is present but can also grow by fermentation or anaerobic respiration when it is absent. Which category fits?",
+      "options": {
+        "A": "Obligate aerobe",
+        "B": "Microaerophile",
+        "C": "Obligate anaerobe",
+        "D": "Facultative anaerobe"
+      },
+      "answer": "D",
+      "explanation": "Facultative anaerobes can maintain life using aerobic respiration when possible or fermentation/anaerobic respiration when oxygen is unavailable.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_69",
+      "subject": "Microbiology",
+      "number": 69,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Oxygen requirements",
+      "question": "A bacterium requires oxygen concentrations lower than atmospheric levels, approximately 5–10%, and has limited ability to detoxify reactive oxygen products. Which category is indicated?",
+      "options": {
+        "A": "Microaerophile",
+        "B": "Aerotolerant anaerobe",
+        "C": "Obligate anaerobe",
+        "D": "Facultative anaerobe"
+      },
+      "answer": "A",
+      "explanation": "Microaerophiles require reduced oxygen concentrations and have limited ability to detoxify hydrogen peroxide and superoxide radicals.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_70",
+      "subject": "Microbiology",
+      "number": 70,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Growth",
+      "question": "A culture shows rapid population increase, peak metabolic activity, young delicate cells, and high sensitivity to antibiotics and UV light. Which phase is this?",
+      "options": {
+        "A": "Lag phase",
+        "B": "Log/exponential phase",
+        "C": "Stationary phase",
+        "D": "Death phase"
+      },
+      "answer": "B",
+      "explanation": "The log phase is characterized by rapid, exponential division, high metabolic activity, and relative susceptibility to antibiotics and UV light.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_71",
+      "subject": "Microbiology",
+      "number": 71,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Growth",
+      "question": "In a bacterial culture, the number of cells formed equals the number dying, nutrients are depleted, and waste accumulates. Which phase is represented?",
+      "options": {
+        "A": "Lag phase",
+        "B": "Log phase",
+        "C": "Stationary phase",
+        "D": "Death phase"
+      },
+      "answer": "C",
+      "explanation": "The stationary phase is an equilibrium between new cells and dying cells and is associated with nutrient depletion and waste accumulation.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_72",
+      "subject": "Microbiology",
+      "number": 72,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Growth",
+      "question": "A culture becomes Gram-variable and cells die faster than they are produced because nutrients are exhausted and toxic wastes accumulate. Which phase is occurring?",
+      "options": {
+        "A": "Lag phase",
+        "B": "Log phase",
+        "C": "Stationary phase",
+        "D": "Death/decline phase"
+      },
+      "answer": "D",
+      "explanation": "In the death phase, viable cells decline because death exceeds replication; the material also notes Gram-variable staining during this phase.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_73",
+      "subject": "Microbiology",
+      "number": 73,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Growth calculation",
+      "question": "A bacterial population increases from 1,000 to 8,000 cells under ideal conditions. How many generations have occurred?",
+      "options": {
+        "A": "2",
+        "B": "3",
+        "C": "4",
+        "D": "8"
+      },
+      "answer": "B",
+      "explanation": "Each generation doubles the population: 1,000 → 2,000 → 4,000 → 8,000. This is three doublings, so n = 3.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_74",
+      "subject": "Microbiology",
+      "number": 74,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Culture media",
+      "question": "A specimen is thought to contain very small numbers of a pathogen. The laboratory first uses a medium and conditions intended to increase that organism's numbers before isolation. Which medium strategy is being used?",
+      "options": {
+        "A": "Differential medium",
+        "B": "Enrichment medium",
+        "C": "Counterstain",
+        "D": "Acid-fast staining"
+      },
+      "answer": "B",
+      "explanation": "Enrichment media promote multiplication of a desired organism when its initial number in a specimen is low, facilitating later isolation.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_75",
+      "subject": "Microbiology",
+      "number": 75,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Culture media",
+      "question": "A laboratory wants a medium that suppresses Gram-positive bacteria while permitting Gram-negative bacteria to grow. Which medium from the material best fits?",
+      "options": {
+        "A": "Mannitol-salt agar",
+        "B": "Eosin-methylene blue agar",
+        "C": "Plain nutrient broth only",
+        "D": "Methylene blue counterstain"
+      },
+      "answer": "B",
+      "explanation": "EMB contains methylene blue, which inhibits Gram-positive bacteria and allows growth of Gram-negative organisms; it can also differentiate fermentation patterns.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_76",
+      "subject": "Microbiology",
+      "number": 76,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Culture media",
+      "question": "A medium permits growth of selected bacteria and also distinguishes organisms by visible changes related to lactose fermentation. Which statement best describes its properties?",
+      "options": {
+        "A": "It is only enriched and cannot be selective",
+        "B": "It can be both selective and differential",
+        "C": "It is a stain rather than a culture medium",
+        "D": "It is used only for viruses"
+      },
+      "answer": "B",
+      "explanation": "MacConkey and EMB are examples that select for Gram-negative organisms and differentiate based on carbohydrate fermentation reactions.",
+      "difficulty": "Difficult"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_77",
+      "subject": "Microbiology",
+      "number": 77,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Gene transfer",
+      "question": "A bacterium acquires free DNA fragments from its surroundings and incorporates genetic information from them. Which mechanism is involved?",
+      "options": {
+        "A": "Conjugation",
+        "B": "Transformation",
+        "C": "Transduction",
+        "D": "Vertical transfer"
+      },
+      "answer": "B",
+      "explanation": "Transformation is uptake of isolated DNA from the surrounding medium; conjugation requires direct cell contact, while transduction is phage-mediated.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_78",
+      "subject": "Microbiology",
+      "number": 78,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Gene transfer",
+      "question": "A donor bacterium carrying a fertility plasmid transfers DNA directly to an F− recipient through cell contact. Which mechanism is occurring?",
+      "options": {
+        "A": "Transformation",
+        "B": "Conjugation",
+        "C": "Transduction",
+        "D": "Binary fission"
+      },
+      "answer": "B",
+      "explanation": "Conjugation transfers DNA by direct contact between bacterial cells; the material describes transfer from an F+ donor to an F− recipient.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_79",
+      "subject": "Microbiology",
+      "number": 79,
+      "part": "Part 2",
+      "partNumber": 2,
+      "topic": "Gene transfer",
+      "question": "A bacteriophage mediates transfer of bacterial genes from one bacterium to another. Which mechanism is this?",
+      "options": {
+        "A": "Transformation",
+        "B": "Conjugation",
+        "C": "Transduction",
+        "D": "Vertical gene transfer"
+      },
+      "answer": "B",
+      "explanation": "Transduction is gene transfer mediated by a bacteriophage, distinguishing it from free-DNA uptake in transformation and direct contact in conjugation.",
+      "difficulty": "Medium"
+    },
+    {
+      "id": "microbiology_intro_bacteriology_80",
+      "subject": "Microbiology",
+      "number": 80,
+      "part": "Part 1",
+      "partNumber": 1,
+      "topic": "Scope & applications",
+      "question": "A pharmaceutical company studies microorganisms that can produce antibiotics and vaccines while also monitoring contamination of its products. Which branch of microbiology most directly covers this work?",
+      "options": {
+        "A": "Industrial microbiology",
+        "B": "Pharmaceutical microbiology",
+        "C": "Ecological microbiology only",
+        "D": "Taxonomic nomenclature"
+      },
+      "answer": "B",
+      "explanation": "Pharmaceutical microbiology focuses on microorganisms involved in producing antibiotics, vaccines, enzymes, vitamins, and other pharmaceutical products, as well as microbial contamination and spoilage.",
+      "difficulty": "Medium"
+    }
+  ]
+}
