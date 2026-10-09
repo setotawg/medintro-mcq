@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from time import monotonic
 
-from openai import AsyncOpenAI
+from groq import AsyncGroq
 from telegram import (
     Update,
     BotCommand,
@@ -25,7 +25,7 @@ from telegram.ext import (
 # =========================
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 
 SITE_URL = "https://setotawg.github.io/medintro-mcq/"
 BOT_USERNAME = "MedIntroStudyBot"
@@ -40,7 +40,7 @@ WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "")
 
 if not PUBLIC_URL:
     raise RuntimeError(
-        "Set WEBHOOK_URL to your hosted service URL."
+        "Set WEBHOOK_URL to your public Render service URL."
     )
 
 logging.basicConfig(
@@ -50,38 +50,41 @@ logging.basicConfig(
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
-ai = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
-# Basic per-user cooldown to reduce accidental spam.
+ai = AsyncGroq(api_key=GROQ_API_KEY)
+
+MODEL = os.getenv(
+    "GROQ_MODEL",
+    "openai/gpt-oss-20b",
+)
+
+# Basic per-user cooldown.
 last_request = defaultdict(float)
 COOLDOWN_SECONDS = 3
 
 SYSTEM_INSTRUCTIONS = """
-You are MedIntroStudyBot, a friendly educational assistant
-for medical students using the MedIntro learning platform.
+You are MedIntroStudyBot, the educational assistant
+for students using the MedIntro learning platform.
 
-Your responsibilities:
+YOUR RESPONSIBILITIES
+
 1. Explain medical concepts clearly and accurately.
-2. Help students study anatomy, physiology, biochemistry,
-   immunology, pathology, pharmacology, microbiology,
-   parasitology and related medical subjects.
-3. Use structured explanations with headings when useful.
-4. Explain mechanisms, clinical relevance and important
-   exam points when appropriate.
-5. Help students use MedIntro, open the MCQ website and
-   understand the bot's commands.
-6. If asked where to practise MCQs, provide this URL:
+2. Support anatomy, physiology, biochemistry, immunology,
+   pathology, pharmacology, microbiology and parasitology.
+3. Explain mechanisms, clinical relevance and exam points.
+4. Provide organized explanations and examples when useful.
+5. Help students navigate MedIntro and use its commands.
+6. The MedIntro MCQ website is:
    https://setotawg.github.io/medintro-mcq/
-7. If you do not know an answer, say so instead of inventing
-   facts. Never fabricate references or exam answers.
-8. This is an educational assistant, not a replacement for
-   a clinician. Do not diagnose students or prescribe
-   individualized treatment. Encourage professional care
-   for personal medical problems and urgent symptoms.
-9. Be respectful, concise by default, and willing to explain
-   difficult concepts in more depth when asked.
-10. Do not claim to access private MedIntro content, student
-    records or website databases unless actually connected.
+7. Never invent facts, references or examination answers.
+8. Distinguish established facts from uncertainty.
+9. You are an educational assistant, not a replacement
+   for a qualified clinician. Do not diagnose users or
+   prescribe individualized treatment.
+10. For urgent symptoms, recommend appropriate medical care.
+11. Be respectful, encouraging and concise by default.
+12. Do not claim to access private notes, MCQ databases,
+    student records or other website data unless connected.
 """
 
 # =========================
@@ -91,14 +94,17 @@ Your responsibilities:
 async def post_init(app: Application):
     await app.bot.set_my_commands([
         BotCommand("start", "Start MedIntro assistant"),
-        BotCommand("help", "See what I can do"),
+        BotCommand("help", "See available features"),
         BotCommand("app", "Open the MedIntro website"),
         BotCommand("ask", "Ask a medical study question"),
     ])
     logger.info("Bot commands registered.")
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
     keyboard = InlineKeyboardMarkup([
         [
             InlineKeyboardButton(
@@ -110,12 +116,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     message = (
         "🩺 Welcome to MedIntro!\n\n"
-        "I'm your study assistant. I can help explain "
+        "I'm your medical-study assistant. I can explain "
         "medical concepts and guide you around MedIntro.\n\n"
-        "Try these commands:\n"
-        "/help — See all features\n"
+        "Available commands:\n"
+        "/help — See available features\n"
         "/app — Open the MCQ website\n"
-        "/ask your question — Ask a study question\n\n"
+        "/ask your question — Ask a medical question\n\n"
         "You can also send me a message in this private chat."
     )
 
@@ -135,12 +141,12 @@ async def help_command(
         "/help — Show this help message\n"
         "/app — Open the MedIntro MCQ website\n"
         "/ask [question] — Ask a medical study question\n\n"
-        "In a group, mention @MedIntroStudyBot or reply "
-        "directly to one of my messages to ask a question.\n\n"
+        "In MedIntro Hub, mention @MedIntroStudyBot "
+        "or reply to one of my messages to ask a question.\n\n"
         "Examples:\n"
         "• Explain the cardiac action potential.\n"
         "• Differentiate osteoblasts and osteoclasts.\n"
-        "• How do I open the MedIntro MCQ website?"
+        "• Explain the mechanism of beta blockers."
     )
 
 
@@ -158,8 +164,8 @@ async def app_command(
     ])
 
     await update.effective_message.reply_text(
-        "🩺 Open MedIntro to practise and strengthen "
-        "your medical knowledge.",
+        "🩺 Practise questions and strengthen "
+        "your medical knowledge on MedIntro.",
         reply_markup=keyboard,
     )
 
@@ -172,9 +178,9 @@ async def ask_command(
 
     if not question:
         await update.effective_message.reply_text(
-            "Send your question after the command.\n\n"
-            "Example: /ask Explain the mechanism of action "
-            "of beta blockers."
+            "Write your question after /ask.\n\n"
+            "Example:\n"
+            "/ask Explain the mechanism of beta blockers."
         )
         return
 
@@ -208,29 +214,42 @@ async def answer_question(
         return
 
     now = monotonic()
+
     if now - last_request[user.id] < COOLDOWN_SECONDS:
         await message.reply_text(
-            "Please wait a moment before sending another question."
+            "Please wait a moment before asking another question."
         )
         return
 
     last_request[user.id] = now
 
     status = await message.reply_text("🧠 Thinking...")
+
     await context.bot.send_chat_action(
         chat_id=message.chat_id,
         action=ChatAction.TYPING,
     )
 
     try:
-        response = await ai.responses.create(
-            model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
-            instructions=SYSTEM_INSTRUCTIONS,
-            input=question,
-            max_output_tokens=600,
+        response = await ai.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": SYSTEM_INSTRUCTIONS,
+                },
+                {
+                    "role": "user",
+                    "content": question,
+                },
+            ],
+            max_tokens=600,
+            temperature=0.4,
         )
 
-        answer = response.output_text.strip()
+        answer = (
+            response.choices[0].message.content or ""
+        ).strip()
 
         if not answer:
             answer = (
@@ -238,7 +257,6 @@ async def answer_question(
                 "Please try asking in a different way."
             )
 
-        # Telegram messages have a length limit.
         chunks = [
             answer[i:i + 3800]
             for i in range(0, len(answer), 3800)
@@ -250,22 +268,29 @@ async def answer_question(
             await message.reply_text(chunk)
 
     except Exception:
-        logger.exception("Error generating assistant response.")
+        logger.exception("Error generating AI response.")
+
         await status.edit_text(
             "Sorry, I couldn't answer that just now. "
-            "Please try again in a moment."
+            "Please try again later. If this continues, "
+            "the service may be temporarily unavailable "
+            "or its free-tier limit may have been reached."
         )
 
+
+# =========================
+# HANDLE TEXT MESSAGES
+# =========================
 
 async def handle_text(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
     message = update.effective_message
+
     if not message or not message.text:
         return
 
-    # In groups, only answer when addressed directly.
     if message.chat.type in ("group", "supergroup"):
         is_reply_to_bot = (
             message.reply_to_message is not None
@@ -281,12 +306,19 @@ async def handle_text(
         if not (is_reply_to_bot or is_mentioned):
             return
 
-        question = message.text.replace(
-            f"@{BOT_USERNAME}", ""
+        question = message.text
+
+        # Remove the bot mention without case sensitivity.
+        import re
+        question = re.sub(
+            rf"@{re.escape(BOT_USERNAME)}\b",
+            "",
+            question,
+            flags=re.IGNORECASE,
         ).strip()
 
-        if is_reply_to_bot and not question:
-            question = message.text.strip()
+        if not question and is_reply_to_bot:
+            question = "Please continue helping me."
 
     else:
         question = message.text.strip()
@@ -303,6 +335,7 @@ async def welcome(
     context: ContextTypes.DEFAULT_TYPE,
 ):
     message = update.effective_message
+
     if not message:
         return
 
@@ -313,8 +346,8 @@ async def welcome(
         await message.reply_text(
             f"👋 Welcome, {member.first_name}!\n\n"
             "Welcome to MedIntro Hub 🩺\n"
-            "Use /help to learn what our assistant can do, "
-            "and /app to open the MCQ website.\n\n"
+            "Use /help to explore the assistant or /app "
+            "to open the MCQ website.\n\n"
             "Learn together. Practise consistently. "
             "Become a better medical professional."
         )
@@ -355,7 +388,9 @@ def main():
         listen="0.0.0.0",
         port=PORT,
         url_path=BOT_TOKEN,
-        webhook_url=f"{PUBLIC_URL.rstrip('/')}/{BOT_TOKEN}",
+        webhook_url=(
+            f"{PUBLIC_URL.rstrip('/')}/{BOT_TOKEN}"
+        ),
         secret_token=WEBHOOK_SECRET or None,
         allowed_updates=Update.ALL_TYPES,
         drop_pending_updates=True,
