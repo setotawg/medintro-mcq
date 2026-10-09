@@ -1,18 +1,594 @@
+
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MedIntro | Practice MCQs</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0b0d">
+<title>MedIntro | Medical MCQ Practice</title>
 <style>
-:root{--bg:#0b0b0d;--panel:#151518;--gold:#d8b35a;--muted:#a8a8ad;--line:#303035;--text:#f6f5f1;--green:#56c596;--red:#f07a7a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.wrap{max-width:900px;margin:auto;padding:24px 16px 56px}.brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}.mark{display:grid;place-items:center;width:46px;height:46px;border:1px solid var(--gold);border-radius:12px;color:var(--gold);font-weight:900;font-size:20px}.brand small{display:block;color:var(--muted)}h1{font-size:clamp(1.5rem,4vw,2.2rem);line-height:1.2;margin:0 0 8px}h2{font-size:1.15rem;margin:0}.gold{color:var(--gold)}.muted{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0}.row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.btn{background:var(--gold);color:#17130a;border:0;border-radius:10px;padding:11px 16px;font-weight:800;cursor:pointer}.btn.secondary{background:#242428;color:var(--text);border:1px solid var(--line)}.btn:disabled{opacity:.4;cursor:not-allowed}.hidden{display:none!important}.progress{height:7px;background:#2a2a2e;border-radius:99px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}.option{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:14px;border:1px solid var(--line);border-radius:12px;background:#1c1c20;color:var(--text);margin:10px 0;cursor:pointer}.option:hover{border-color:#777}.option.selected{border-color:var(--gold);background:#292419}.letter{flex:0 0 29px;height:29px;border-radius:8px;display:grid;place-items:center;background:#303035;color:var(--gold);font-weight:800}.option.correct{border-color:var(--green)}.option.wrong{border-color:var(--red)}.explain{padding:14px;border-radius:10px;background:#202024;margin-top:14px}.pill{border:1px solid var(--line);border-radius:99px;padding:5px 10px;color:var(--muted);font-size:.85rem}.stat{font-size:1.7rem;font-weight:850}.notice{font-size:.9rem;color:var(--muted)}.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:580px){.choices{grid-template-columns:1fr}.panel{padding:16px}}
-</style></head><body><main class="wrap"><div class="brand"><div class="mark">M</div><div><strong>MEDINTRO</strong><small>Medical learning • Practice MCQs</small></div></div>
-<section id="home"><p class="gold"><strong>QUESTION BANK PRACTICE</strong></p><h1 id="examTitle">Loading question bank…</h1><p id="examDesc" class="muted"></p><div class="panel"><div class="row"><div><div class="muted">Available questions</div><div class="stat" id="totalCount">—</div></div><div><div class="muted">Structure</div><strong>2 parts · 40 questions each</strong></div></div><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><p>Choose a part to practice. Your score and answer review appear when you finish that part. No name or result is uploaded by this static demo.</p><div class="choices"><button class="btn" id="part1">Start Part 1 · Q1–40</button><button class="btn" id="part2">Start Part 2 · Q41–80</button><button class="btn secondary" id="allPart">Practice all 80</button></div></div><p class="notice">Question bank is loaded from a separate JSON file. To add another exam later, add another JSON file and connect it to the website.</p></section>
-<section id="quiz" class="hidden"><div class="row"><span class="pill" id="partLabel"></span><span class="muted" id="counter"></span></div><div class="progress"><span id="bar"></span></div><div class="panel"><div class="row"><span class="gold" id="topic"></span><span class="pill" id="difficulty"></span></div><h2 id="questionText" style="margin-top:14px"></h2><div id="options"></div><div id="feedback" class="explain hidden"></div><div class="row" style="margin-top:18px"><button class="btn secondary" id="exit">Exit</button><div class="row"><button class="btn secondary" id="prev">Previous</button><button class="btn" id="next">Next</button></div></div></div></section>
-<section id="results" class="hidden"><div class="panel"><p class="gold"><strong>PRACTICE COMPLETE</strong></p><h1 id="resultTitle">Your result</h1><div class="stat" id="score"></div><p id="resultText" class="muted"></p><div class="progress"><span id="resultBar"></span></div><div class="row"><button class="btn" id="review">Review answers</button><button class="btn secondary" id="homeBtn">Back to home</button></div></div><div id="reviewList"></div></section>
-</main><script>
-const BANK_URL='./question-bank/microbiology.json';let bank=null,items=[],answers={},index=0,reviewMode=false,partLabel='';
-const $=id=>document.getElementById(id);function show(id){['home','quiz','results'].forEach(x=>$(x).classList.toggle('hidden',x!==id))}
-async function loadBank(){try{const r=await fetch(BANK_URL);if(!r.ok)throw new Error('Could not load question bank');bank=await r.json();$('examTitle').textContent=bank.title;$('examDesc').textContent=bank.description;$('totalCount').textContent=bank.questions.length;$('part1').disabled=bank.questions.filter(q=>q.partNumber===1).length===0;$('part2').disabled=bank.questions.filter(q=>q.partNumber===2).length===0;}catch(e){$('examTitle').textContent='Question bank could not load';$('examDesc').textContent='Check that question-bank/microbiology.json exists and is committed to GitHub.';console.error(e)}}
-function start(part){if(!bank)return;items=part==='all'?bank.questions:bank.questions.filter(q=>q.partNumber===part);if(!items.length)return;answers={};index=0;reviewMode=false;partLabel=part==='all'?'All 80 questions':`Part ${part}`;renderQuestion();show('quiz')}
-function renderQuestion(){const q=items[index];$('partLabel').textContent=partLabel;$('counter').textContent=`Question ${index+1} of ${items.length}`;$('bar').style.width=`${(index+1)/items.length*100}%`;$('topic').textContent=q.topic;$('difficulty').textContent=q.difficulty;$('questionText').textContent=q.question;$('options').innerHTML='';$('feedback').classList.add('hidden');for(const [letter,text] of Object.entries(q.options)){const b=document.createElement('button');b.className='option'+(answers[q.id]===letter?' selected':'');b.innerHTML=`<span class="letter">${letter}</span><span></span>`;b.children[1].textContent=text;b.onclick=()=>{if(reviewMode)return;answers[q.id]=letter;renderQuestion()};$('options').appendChild(b)}$('prev').disabled=index===0;$('next').textContent=index===items.length-1?'Finish':'Next';if(reviewMode)showFeedback(q)}
-function showFeedback(q){const nodes=[...$('options').children];nodes.forEach((n,i)=>{const l=Object.keys(q.options)[i];if(l===q.answer)n.classList.add('correct');if(answers[q.id]===l&&l!==q.answer)n.classList.add('wrong')});$('feedback').classList.remove('hidden');$('feedback').innerHTML='';const h=document.createElement('strong');h.textContent=`Correct answer: ${q.answer} — ${q.options[q.answer]}`;const p=document.createElement('p');p.textContent=q.explanation;$('feedback').append(h,p)}
-function next(){if(index<items.length-1){index++;renderQuestion()}else finish()};function finish(){reviewMode=true;let correct=items.filter(q=>answers[q.id]===q.answer).length;$('resultTitle').textContent=partLabel;$('score').textContent=`${correct} / ${items.length} (${Math.round(correct/items.length*100)}%)`;$('resultText').textContent=`You answered ${Object.keys(answers).filter(k=>items.some(q=>q.id===k)).length} of ${items.length} questions.`;$('resultBar').style.width=`${correct/items.length*100}%`;$('reviewList').innerHTML='';items.forEach((q,i)=>{const d=document.createElement('div');d.className='panel';const title=document.createElement('h2');title.textContent=`${i+1}. ${q.question}`;d.appendChild(title);for(const [l,t] of Object.entries(q.options)){const p=document.createElement('p');p.textContent=`${l}. ${t}`;if(l===q.answer)p.style.color='var(--green)';if(answers[q.id]===l&&l!==q.answer)p.style.color='var(--red)';d.appendChild(p)}const ex=document.createElement('p');ex.className='muted';ex.textContent=`Correct answer: ${q.answer}. ${q.explanation}`;d.appendChild(ex);$('reviewList').appendChild(d)});show('results')}
-$('part1').onclick=()=>start(1);$('part2').onclick=()=>start(2);$('allPart').onclick=()=>start('all');$('prev').onclick=()=>{if(index>0){index--;renderQuestion()}};$('next').onclick=next;$('exit').onclick=()=>show('home');$('homeBtn').onclick=()=>show('home');$('review').onclick=()=>{$('reviewList').scrollIntoView({behavior:'smooth'})};loadBank();
-</script></body></html>
+:root{
+  --bg:#0b0b0d;--panel:#151518;--gold:#d8b35a;
+  --muted:#a8a8ad;--line:#303035;--text:#f6f5f1;
+  --green:#56c596;--red:#f07a7a;--blue:#83b7f4
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,select{font:inherit}
+button:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.wrap{max-width:1050px;margin:auto;padding:24px 16px 56px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.mark{display:grid;place-items:center;width:46px;height:46px;border:1px solid var(--gold);border-radius:12px;color:var(--gold);font-weight:900;font-size:20px}
+.brand small{display:block;color:var(--muted)}
+h1{font-size:clamp(1.5rem,4vw,2.2rem);line-height:1.2;margin:0 0 8px}
+h2{font-size:1.15rem;margin:0}
+h3{font-size:1rem;margin:0 0 8px}
+.gold{color:var(--gold)}
+.muted{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0}
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.btn{background:var(--gold);color:#17130a;border:0;border-radius:10px;padding:11px 16px;font-weight:800;cursor:pointer}
+.btn.secondary{background:#242428;color:var(--text);border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.hidden{display:none!important}
+.progress{height:7px;background:#2a2a2e;border-radius:99px;overflow:hidden;margin:12px 0}
+.progress span{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
+.option{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:14px;border:1px solid var(--line);border-radius:12px;background:#1c1c20;color:var(--text);margin:10px 0;cursor:pointer}
+.option:hover{border-color:#777}
+.option.selected{border-color:var(--gold);background:#292419}
+.letter{flex:0 0 29px;height:29px;border-radius:8px;display:grid;place-items:center;background:#303035;color:var(--gold);font-weight:800}
+.option.correct{border-color:var(--green)}
+.option.wrong{border-color:var(--red)}
+.explain{padding:14px;border-radius:10px;background:#202024;margin-top:14px}
+.pill{border:1px solid var(--line);border-radius:99px;padding:5px 10px;color:var(--muted);font-size:.85rem}
+.stat{font-size:1.7rem;font-weight:850}
+.notice{font-size:.9rem;color:var(--muted)}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.exam-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.exam-card{background:#1c1c20;border:1px solid var(--line);border-radius:14px;padding:16px}
+.exam-card p{color:var(--muted);font-size:.92rem}
+.timer{font-size:1.25rem;font-weight:850;font-variant-numeric:tabular-nums}
+.timer.warning{color:var(--red)}
+.nav-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin-top:14px}
+.nav-q{min-width:0;min-height:40px;border:1px solid var(--line);border-radius:9px;background:#202024;color:var(--text);cursor:pointer}
+.nav-q.current{border:2px solid var(--gold)}
+.nav-q.answered{background:#383020}
+.nav-q.flagged{box-shadow:inset 0 -3px var(--blue)}
+.nav-q.correct{border-color:var(--green)}
+.nav-q.wrong{border-color:var(--red)}
+.nav-legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:.82rem;margin-top:10px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;background:#383020}
+.dot.current{background:var(--gold)}
+.dot.flagged{background:var(--blue)}
+.dot.done{background:var(--green)}
+.review-card{scroll-margin-top:12px}
+select{background:#202024;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+.field{display:grid;gap:6px;min-width:180px;flex:1}
+@media(max-width:580px){
+ .choices{grid-template-columns:1fr}
+ .panel{padding:16px}
+ .nav-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+ .btn{padding:10px 12px}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="brand">
+  <div class="mark">M</div>
+  <div><strong>MEDINTRO</strong><small>Medical learning · Practice MCQs</small></div>
+</header>
+
+<section id="home">
+  <p class="gold"><strong>QUESTION BANK PRACTICE</strong></p>
+  <h1>Build your medical knowledge.</h1>
+  <p class="muted">Choose a question bank, select your exam mode, and practice at your own pace.</p>
+
+  <div class="panel">
+    <div class="row">
+      <div><div class="muted">Available exams</div><div class="stat" id="examCount">—</div></div>
+      <div><div class="muted">Question banks</div><strong>Expandable catalogue</strong></div>
+    </div>
+    <p id="catalogStatus" class="notice" role="status">Loading exam catalogue…</p>
+    <div id="examList" class="exam-grid"></div>
+  </div>
+  <p class="notice">Your answers are held in this page during the practice session. This public practice site does not upload your name or score.</p>
+</section>
+
+<section id="setup" class="hidden">
+  <button class="btn secondary" id="backCatalog">← All exams</button>
+  <div class="panel">
+    <p class="gold"><strong>EXAM SETUP</strong></p>
+    <h1 id="setupTitle">Choose your practice mode</h1>
+    <p id="setupDesc" class="muted"></p>
+    <div class="choices">
+      <div class="field">
+        <label for="partSelect">Question range</label>
+        <select id="partSelect">
+          <option value="all">All available questions</option>
+          <option value="1">Part 1</option>
+          <option value="2">Part 2</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="durationSelect">Time limit</label>
+        <select id="durationSelect">
+          <option value="0">No time limit</option>
+          <option value="20">20 minutes</option>
+          <option value="40" selected>40 minutes</option>
+          <option value="60">60 minutes</option>
+          <option value="90">90 minutes</option>
+        </select>
+      </div>
+    </div>
+    <p id="rangeInfo" class="notice"></p>
+    <button class="btn" id="startExam">Start practice</button>
+  </div>
+</section>
+
+<section id="quiz" class="hidden">
+  <div class="panel">
+    <div class="row">
+      <span class="pill" id="examLabel"></span>
+      <div class="row">
+        <span class="pill" id="answeredLabel">Answered: 0</span>
+        <span class="timer" id="timer" aria-live="polite">No limit</span>
+      </div>
+    </div>
+    <div class="progress"><span id="bar"></span></div>
+    <div class="row">
+      <span class="muted" id="counter"></span>
+      <span class="pill" id="difficulty"></span>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <span class="gold" id="topic"></span>
+      <button class="btn secondary" id="flagBtn">☆ Mark for review</button>
+    </div>
+    <h2 id="questionText" style="margin-top:14px"></h2>
+    <div id="options"></div>
+    <div id="feedback" class="explain hidden"></div>
+    <div class="row" style="margin-top:18px">
+      <button class="btn secondary" id="exit">Exit</button>
+      <div class="row">
+        <button class="btn secondary" id="prev">Previous</button>
+        <button class="btn" id="next">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="row">
+      <h2>Question navigator</h2>
+      <span class="muted" id="navHelp">Select a number to jump</span>
+    </div>
+    <div id="navGrid" class="nav-grid"></div>
+    <div class="nav-legend">
+      <span><i class="dot current"></i>Current</span>
+      <span><i class="dot done"></i>Answered</span>
+      <span><i class="dot flagged"></i>Marked for review</span>
+    </div>
+    <p class="notice">Unanswered questions are allowed, but they will count as incorrect when you submit.</p>
+    <button class="btn secondary" id="finishBtn">Submit exam</button>
+  </div>
+</section>
+
+<section id="results" class="hidden">
+  <div class="panel">
+    <p class="gold"><strong>PRACTICE COMPLETE</strong></p>
+    <h1 id="resultTitle">Your result</h1>
+    <div class="stat" id="score"></div>
+    <p id="resultText" class="muted"></p>
+    <div class="progress"><span id="resultBar"></span></div>
+    <div class="choices">
+      <div class="panel"><div class="muted">Correct</div><div class="stat" id="correctStat">0</div></div>
+      <div class="panel"><div class="muted">Incorrect</div><div class="stat" id="wrongStat">0</div></div>
+      <div class="panel"><div class="muted">Unanswered</div><div class="stat" id="blankStat">0</div></div>
+      <div class="panel"><div class="muted">Marked for review</div><div class="stat" id="flagStat">0</div></div>
+    </div>
+    <div class="row">
+      <button class="btn" id="reviewBtn">Review answers</button>
+      <button class="btn secondary" id="retryBtn">Try again</button>
+      <button class="btn secondary" id="homeBtn">All exams</button>
+    </div>
+  </div>
+  <div id="reviewList"></div>
+</section>
+</main>
+
+<script>
+'use strict';
+
+const CATALOG_URL = './question-bank/index.json';
+const $ = id => document.getElementById(id);
+
+let catalogue = [];
+let currentExam = null;
+let bank = null;
+let items = [];
+let answers = {};
+let flagged = new Set();
+let index = 0;
+let secondsLeft = 0;
+let timerId = null;
+let submitted = false;
+let lastPart = 'all';
+let lastDuration = 40;
+
+function show(section) {
+  ['home','setup','quiz','results'].forEach(id =>
+    $(id).classList.toggle('hidden', id !== section)
+  );
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function safeText(value, fallback='') {
+  return typeof value === 'string' ? value : fallback;
+}
+
+function questionKey(q, i) {
+  return String(q.id ?? q.questionNumber ?? q.question_number ?? i);
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url, {cache:'no-store'});
+  if (!response.ok) throw new Error('HTTP ' + response.status + ' loading ' + url);
+  return response.json();
+}
+
+async function loadCatalogue() {
+  $('catalogStatus').textContent = 'Loading exam catalogue…';
+  try {
+    const data = await fetchJson(CATALOG_URL);
+    if (!data || !Array.isArray(data.exams)) {
+      throw new Error('Catalogue must contain an exams array.');
+    }
+    catalogue = data.exams.filter(e =>
+      e && typeof e.id === 'string' &&
+      typeof e.file === 'string' &&
+      typeof e.title === 'string'
+    );
+    renderCatalogue();
+    $('catalogStatus').textContent = catalogue.length
+      ? 'Choose an exam to begin.'
+      : 'No valid exams were found in the catalogue.';
+  } catch (error) {
+    console.error(error);
+    $('catalogStatus').textContent =
+      'Could not load the exam catalogue. Check question-bank/index.json and try refreshing.';
+  }
+}
+
+function renderCatalogue() {
+  $('examCount').textContent = catalogue.length;
+  $('examList').replaceChildren();
+
+  catalogue.forEach(exam => {
+    const card = document.createElement('article');
+    card.className = 'exam-card';
+
+    const title = document.createElement('h2');
+    title.textContent = exam.title;
+
+    const description = document.createElement('p');
+    description.textContent = exam.description || 'Practice questions';
+
+    const button = document.createElement('button');
+    button.className = 'btn';
+    button.textContent = 'Open exam';
+    button.onclick = () => openExam(exam);
+
+    card.append(title, description, button);
+    $('examList').appendChild(card);
+  });
+}
+
+async function openExam(exam) {
+  $('catalogStatus').textContent = 'Loading ' + exam.title + '…';
+  try {
+    // Each catalogue file is relative to question-bank/.
+    const data = await fetchJson('./question-bank/' + exam.file);
+    if (!data || !Array.isArray(data.questions)) {
+      throw new Error('Question bank must contain a questions array.');
+    }
+    if (!data.questions.length) throw new Error('This bank has no questions.');
+
+    currentExam = exam;
+    bank = data;
+    $('setupTitle').textContent = exam.title;
+    $('setupDesc').textContent = exam.description || data.description || '';
+    const p1 = data.questions.filter(q => Number(q.partNumber ?? q.part_number) === 1).length;
+    const p2 = data.questions.filter(q => Number(q.partNumber ?? q.part_number) === 2).length;
+
+    $('partSelect').innerHTML = '';
+    addSelectOption('all', 'All questions (' + data.questions.length + ')');
+    if (p1) addSelectOption('1', 'Part 1 (' + p1 + ')');
+    if (p2) addSelectOption('2', 'Part 2 (' + p2 + ')');
+
+    $('partSelect').value = 'all';
+    $('durationSelect').value = '40';
+    updateRangeInfo();
+    show('setup');
+  } catch (error) {
+    console.error(error);
+    $('catalogStatus').textContent =
+      'Could not load ' + exam.title + '. Check that question-bank/' +
+      exam.file + ' exists and contains valid JSON.';
+    show('home');
+  }
+}
+
+function addSelectOption(value, label) {
+  const option = document.createElement('option');
+  option.value = value;
+  option.textContent = label;
+  $('partSelect').appendChild(option);
+}
+
+function updateRangeInfo() {
+  if (!bank) return;
+  const part = $('partSelect').value;
+  const list = part === 'all' ? bank.questions :
+    bank.questions.filter(q => Number(q.partNumber ?? q.part_number) === Number(part));
+  $('rangeInfo').textContent = list.length + ' questions will be included.';
+}
+
+function stopTimer() {
+  if (timerId !== null) clearInterval(timerId);
+  timerId = null;
+}
+
+function startTimer(minutes) {
+  stopTimer();
+  secondsLeft = minutes * 60;
+  if (!minutes) {
+    $('timer').textContent = 'No limit';
+    $('timer').classList.remove('warning');
+    return;
+  }
+  updateTimerDisplay();
+  timerId = setInterval(() => {
+    secondsLeft--;
+    updateTimerDisplay();
+    if (secondsLeft <= 0) {
+      stopTimer();
+      finishExam(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(Math.max(0,secondsLeft) / 60);
+  const s = Math.max(0,secondsLeft) % 60;
+  $('timer').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  $('timer').classList.toggle('warning', secondsLeft <= 60);
+}
+
+function startExam() {
+  if (!bank || !currentExam) return;
+  const part = $('partSelect').value;
+  lastPart = part;
+  lastDuration = Number($('durationSelect').value);
+  items = part === 'all' ? [...bank.questions] :
+    bank.questions.filter(q => Number(q.partNumber ?? q.part_number) === Number(part));
+  if (!items.length) return;
+
+  // Validate question structure before beginning.
+  const invalid = items.find(q => !q || !q.options || !q.answer);
+  if (invalid) {
+    alert('This question bank has a question missing options or its correct answer.');
+    return;
+  }
+
+  answers = {};
+  flagged = new Set();
+  index = 0;
+  submitted = false;
+  $('examLabel').textContent = currentExam.title +
+    (part === 'all' ? '' : ' · Part ' + part);
+  startTimer(lastDuration);
+  renderQuestion();
+  show('quiz');
+}
+
+function renderQuestion() {
+  if (!items.length) return;
+  const q = items[index];
+  const key = questionKey(q,index);
+  $('counter').textContent = 'Question ' + (index + 1) + ' of ' + items.length;
+  $('bar').style.width = ((index + 1) / items.length * 100) + '%';
+  $('topic').textContent = safeText(q.topic, 'General');
+  $('difficulty').textContent = safeText(q.difficulty, '');
+  $('questionText').textContent = safeText(q.question, 'Question text unavailable.');
+  $('answeredLabel').textContent = 'Answered: ' + Object.keys(answers).length;
+  $('flagBtn').textContent = flagged.has(key) ? '★ Marked for review' : '☆ Mark for review';
+  $('prev').disabled = index === 0;
+  $('next').textContent = index === items.length - 1 ? 'Last question' : 'Next';
+
+  $('options').replaceChildren();
+  Object.entries(q.options).forEach(([letter,text]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'option' + (answers[key] === letter ? ' selected' : '');
+
+    const badge = document.createElement('span');
+    badge.className = 'letter';
+    badge.textContent = letter;
+
+    const content = document.createElement('span');
+    content.textContent = text;
+
+    button.append(badge,content);
+    button.onclick = () => {
+      if (submitted) return;
+      answers[key] = letter;
+      renderQuestion();
+    };
+    $('options').appendChild(button);
+  });
+
+  $('feedback').classList.add('hidden');
+  renderNavigator();
+}
+
+function renderNavigator() {
+  $('navGrid').replaceChildren();
+  items.forEach((q,i) => {
+    const key = questionKey(q,i);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'nav-q';
+    if (i === index) button.classList.add('current');
+    if (Object.hasOwn(answers,key)) button.classList.add('answered');
+    if (flagged.has(key)) button.classList.add('flagged');
+    button.textContent = String(i + 1);
+    button.title = 'Question ' + (i + 1) +
+      (Object.hasOwn(answers,key) ? ' · Answered' : ' · Unanswered') +
+      (flagged.has(key) ? ' · Marked for review' : '');
+    button.setAttribute('aria-label',button.title);
+    button.onclick = () => {
+      index = i;
+      renderQuestion();
+      $('questionText').scrollIntoView({behavior:'smooth',block:'start'});
+    };
+    $('navGrid').appendChild(button);
+  });
+}
+
+function finishExam(timeExpired=false) {
+  if (submitted) return;
+  const unanswered = items.filter((q,i) =>
+    !Object.hasOwn(answers,questionKey(q,i))
+  ).length;
+
+  if (!timeExpired && unanswered > 0) {
+    const proceed = confirm(
+      'You have ' + unanswered + ' unanswered question(s). Submit anyway?'
+    );
+    if (!proceed) return;
+  } else if (!timeExpired && !confirm('Submit your answers and see your score?')) {
+    return;
+  }
+
+  submitted = true;
+  stopTimer();
+  const correct = items.filter((q,i) =>
+    answers[questionKey(q,i)] === q.answer
+  ).length;
+  const wrong = items.length - correct - unanswered;
+  const percent = Math.round(correct / items.length * 100);
+
+  $('resultTitle').textContent = currentExam.title;
+  $('score').textContent = correct + ' / ' + items.length + ' (' + percent + '%)';
+  $('resultText').textContent = timeExpired
+    ? 'Time expired. Your answers have been submitted automatically.'
+    : 'Practice submitted. Review the answers and explanations below.';
+  $('correctStat').textContent = correct;
+  $('wrongStat').textContent = wrong;
+  $('blankStat').textContent = unanswered;
+  $('flagStat').textContent = flagged.size;
+  $('resultBar').style.width = percent + '%';
+
+  buildReview();
+  show('results');
+}
+
+function buildReview() {
+  $('reviewList').replaceChildren();
+  items.forEach((q,i) => {
+    const key = questionKey(q,i);
+    const chosen = answers[key];
+    const correct = chosen === q.answer;
+
+    const card = document.createElement('article');
+    card.className = 'panel review-card';
+    card.id = 'review-' + i;
+
+    const title = document.createElement('h2');
+    title.textContent = (i + 1) + '. ' + q.question;
+    card.appendChild(title);
+
+    const status = document.createElement('p');
+    status.className = correct ? 'gold' : 'muted';
+    status.textContent = correct ? 'Correct' : (chosen ? 'Incorrect' : 'Unanswered');
+    if (flagged.has(key)) status.textContent += ' · Marked for review';
+    card.appendChild(status);
+
+    Object.entries(q.options).forEach(([letter,text]) => {
+      const p = document.createElement('p');
+      p.textContent = letter + '. ' + text;
+      if (letter === q.answer) p.style.color = 'var(--green)';
+      else if (letter === chosen) p.style.color = 'var(--red)';
+      card.appendChild(p);
+    });
+
+    const explanation = document.createElement('div');
+    explanation.className = 'explain';
+    const heading = document.createElement('strong');
+    heading.textContent = 'Correct answer: ' + q.answer +
+      (q.options[q.answer] ? ' — ' + q.options[q.answer] : '');
+    const text = document.createElement('p');
+    text.textContent = q.explanation || 'No explanation was provided for this question.';
+    explanation.append(heading,text);
+    card.appendChild(explanation);
+    $('reviewList').appendChild(card);
+  });
+}
+
+$('partSelect').onchange = updateRangeInfo;
+$('durationSelect').onchange = updateRangeInfo;
+$('startExam').onclick = startExam;
+$('backCatalog').onclick = () => show('home');
+$('prev').onclick = () => {
+  if (index > 0) {
+    index--;
+    renderQuestion();
+  }
+};
+$('next').onclick = () => {
+  if (index < items.length - 1) {
+    index++;
+    renderQuestion();
+  } else {
+    const unanswered = items.filter((q,i) =>
+      !Object.hasOwn(answers,questionKey(q,i))
+    ).length;
+    alert(unanswered
+      ? 'This is the last question. You still have ' + unanswered +
+        ' unanswered question(s). Use the navigator to check them or submit.'
+      : 'You have reached the last question. Submit when ready.');
+  }
+};
+$('flagBtn').onclick = () => {
+  const key = questionKey(items[index],index);
+  if (flagged.has(key)) flagged.delete(key);
+  else flagged.add(key);
+  renderQuestion();
+};
+$('finishBtn').onclick = () => finishExam(false);
+$('exit').onclick = () => {
+  if (confirm('Exit this practice session? Your current answers will be lost.')) {
+    stopTimer();
+    submitted = false;
+    show('home');
+  }
+};
+$('reviewBtn').onclick = () => {
+  $('reviewList').scrollIntoView({behavior:'smooth'});
+};
+$('retryBtn').onclick = () => {
+  if (currentExam) {
+    $('partSelect').value = lastPart;
+    $('durationSelect').value = String(lastDuration);
+    startExam();
+  }
+};
+$('homeBtn').onclick = () => {
+  stopTimer();
+  submitted = false;
+  show('home');
+};
+loadCatalogue();
+</script>
+</body>
+</html>
