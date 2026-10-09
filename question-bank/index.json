@@ -1,0 +1,11 @@
+
+{
+  "exams": [
+    {
+      "id": "microbiology",
+      "title": "Introduction to Medical Microbiology",
+      "description": "Practice essential microbiology concepts with 80 MCQs.",
+      "file": "microbiology.json"
+    }
+  ]
+}
