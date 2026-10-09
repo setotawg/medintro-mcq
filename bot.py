@@ -1,336 +1,142 @@
 
-import os
 import logging
-from collections import defaultdict
-from time import monotonic
+import os
+import re
 
 from groq import AsyncGroq
 from telegram import (
     Update,
-    BotCommand,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    ChatAction,
 )
+from telegram.constants import ChatType
 from telegram.ext import (
     Application,
     CommandHandler,
-    MessageHandler,
     ContextTypes,
+    MessageHandler,
+    ChatMemberHandler,
     filters,
 )
 
-# =========================
+# =========================================================
 # CONFIGURATION
-# =========================
+# =========================================================
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 
-SITE_URL = "https://setotawg.github.io/medintro-mcq/"
-BOT_USERNAME = "MedIntroStudyBot"
+WEBSITE_URL = "https://setotawg.github.io/medintro-mcq/"
 
 PUBLIC_URL = (
     os.getenv("WEBHOOK_URL")
     or os.getenv("RENDER_EXTERNAL_URL")
-)
+    or ""
+).rstrip("/")
 
 PORT = int(os.getenv("PORT", "10000"))
-WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "")
+WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "").strip()
 
-if not PUBLIC_URL:
-    raise RuntimeError(
-        "Set WEBHOOK_URL to your public Render service URL."
-    )
+MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+
+# =========================================================
+# LOGGING AND AI CLIENT
+# =========================================================
 
 logging.basicConfig(
-    format="%(asctime)s %(levelname)s %(message)s",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 )
+
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
 ai = AsyncGroq(api_key=GROQ_API_KEY)
 
-MODEL = os.getenv(
-    "GROQ_MODEL",
-    "openai/gpt-oss-20b",
-)
+SYSTEM_PROMPT = """
+You are MedIntro AI, an educational assistant for medical students.
 
-# Basic per-user cooldown.
-last_request = defaultdict(float)
-COOLDOWN_SECONDS = 3
+Your purpose is to help students understand medicine clearly and accurately.
 
-SYSTEM_INSTRUCTIONS = """
-You are MedIntroStudyBot, the educational assistant
-for students using the MedIntro learning platform.
+Focus on:
+- Anatomy
+- Physiology
+- Biochemistry
+- Immunology
+- Pathology
+- Pharmacology
+- Microbiology
+- Parasitology
+- Clinical medicine
+- OSPE preparation
+- MCQs and exam revision
 
-YOUR RESPONSIBILITIES
+Teaching style:
+1. Start with a direct answer.
+2. Explain the underlying mechanism.
+3. Organize information with clear headings and bullet points.
+4. Connect basic science with clinical relevance when useful.
+5. Highlight high-yield examination points.
+6. Explain unfamiliar medical terminology.
+7. For MCQs, explain why the correct option is correct.
+8. Never invent references, lecture content, or facts.
+9. If uncertain, clearly acknowledge the uncertainty.
+10. Keep answers useful and appropriately detailed.
 
-1. Explain medical concepts clearly and accurately.
-2. Support anatomy, physiology, biochemistry, immunology,
-   pathology, pharmacology, microbiology and parasitology.
-3. Explain mechanisms, clinical relevance and exam points.
-4. Provide organized explanations and examples when useful.
-5. Help students navigate MedIntro and use its commands.
-6. The MedIntro MCQ website is:
-   https://setotawg.github.io/medintro-mcq/
-7. Never invent facts, references or examination answers.
-8. Distinguish established facts from uncertainty.
-9. You are an educational assistant, not a replacement
-   for a qualified clinician. Do not diagnose users or
-   prescribe individualized treatment.
-10. For urgent symptoms, recommend appropriate medical care.
-11. Be respectful, encouraging and concise by default.
-12. Do not claim to access private notes, MCQ databases,
-    student records or other website data unless connected.
+You are an educational assistant, not a replacement for a
+qualified clinician. Do not claim to diagnose a person.
+
+You do not automatically have access to the private contents
+of the MedIntro website, its notes, or its question database.
+Never claim that you have accessed those materials unless
+their contents have actually been provided in the conversation.
 """
 
-# =========================
-# BOT COMMANDS
-# =========================
+# =========================================================
+# KEYBOARDS
+# =========================================================
 
-async def post_init(app: Application):
-    await app.bot.set_my_commands([
-        BotCommand("start", "Start MedIntro assistant"),
-        BotCommand("help", "See available features"),
-        BotCommand("app", "Open the MedIntro website"),
-        BotCommand("ask", "Ask a medical study question"),
-    ])
-    logger.info("Bot commands registered.")
-
-
-async def start(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
-    keyboard = InlineKeyboardMarkup([
+def main_keyboard():
+    return InlineKeyboardMarkup([
         [
             InlineKeyboardButton(
                 "🚀 Open MedIntro",
-                url=SITE_URL,
+                url=WEBSITE_URL,
             )
-        ]
-    ])
-
-    message = (
-        "🩺 Welcome to MedIntro!\n\n"
-        "I'm your medical-study assistant. I can explain "
-        "medical concepts and guide you around MedIntro.\n\n"
-        "Available commands:\n"
-        "/help — See available features\n"
-        "/app — Open the MCQ website\n"
-        "/ask your question — Ask a medical question\n\n"
-        "You can also send me a message in this private chat."
-    )
-
-    await update.effective_message.reply_text(
-        message,
-        reply_markup=keyboard,
-    )
-
-
-async def help_command(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
-    await update.effective_message.reply_text(
-        "📚 MedIntro Assistant Help\n\n"
-        "/start — Start the assistant\n"
-        "/help — Show this help message\n"
-        "/app — Open the MedIntro MCQ website\n"
-        "/ask [question] — Ask a medical study question\n\n"
-        "In MedIntro Hub, mention @MedIntroStudyBot "
-        "or reply to one of my messages to ask a question.\n\n"
-        "Examples:\n"
-        "• Explain the cardiac action potential.\n"
-        "• Differentiate osteoblasts and osteoclasts.\n"
-        "• Explain the mechanism of beta blockers."
-    )
-
-
-async def app_command(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
-    keyboard = InlineKeyboardMarkup([
+        ],
         [
             InlineKeyboardButton(
-                "🚀 Open MedIntro MCQs",
-                url=SITE_URL,
+                "📚 Study Support",
+                callback_data="study_support",
             )
-        ]
+        ],
     ])
 
-    await update.effective_message.reply_text(
-        "🩺 Practise questions and strengthen "
-        "your medical knowledge on MedIntro.",
-        reply_markup=keyboard,
+
+# =========================================================
+# STARTUP
+# =========================================================
+
+async def post_init(application: Application):
+    bot_info = await application.bot.get_me()
+
+    application.bot_data["bot_id"] = bot_info.id
+    application.bot_data["bot_username"] = (
+        bot_info.username or ""
+    ).lower()
+
+    logger.info(
+        "MedIntro bot initialized as @%s",
+        bot_info.username,
     )
 
 
-async def ask_command(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
-    question = " ".join(context.args).strip()
+# =========================================================
+# /START
+# =========================================================
 
-    if not question:
-        await update.effective_message.reply_text(
-            "Write your question after /ask.\n\n"
-            "Example:\n"
-            "/ask Explain the mechanism of beta blockers."
-        )
-        return
-
-    await answer_question(update, context, question)
-
-
-# =========================
-# AI ANSWERING
-# =========================
-
-async def answer_question(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-    question: str,
-):
-    message = update.effective_message
-    user = update.effective_user
-
-    if not message or not user:
-        return
-
-    question = question.strip()
-
-    if not question:
-        return
-
-    if len(question) > 2000:
-        await message.reply_text(
-            "Please shorten your question to 2,000 characters."
-        )
-        return
-
-    now = monotonic()
-
-    if now - last_request[user.id] < COOLDOWN_SECONDS:
-        await message.reply_text(
-            "Please wait a moment before asking another question."
-        )
-        return
-
-    last_request[user.id] = now
-
-    status = await message.reply_text("🧠 Thinking...")
-
-    await context.bot.send_chat_action(
-        chat_id=message.chat_id,
-        action=ChatAction.TYPING,
-    )
-
-    try:
-        response = await ai.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {
-                    "role": "system",
-                    "content": SYSTEM_INSTRUCTIONS,
-                },
-                {
-                    "role": "user",
-                    "content": question,
-                },
-            ],
-            max_tokens=600,
-            temperature=0.4,
-        )
-
-        answer = (
-            response.choices[0].message.content or ""
-        ).strip()
-
-        if not answer:
-            answer = (
-                "I couldn't generate an answer this time. "
-                "Please try asking in a different way."
-            )
-
-        chunks = [
-            answer[i:i + 3800]
-            for i in range(0, len(answer), 3800)
-        ]
-
-        await status.edit_text(chunks[0])
-
-        for chunk in chunks[1:]:
-            await message.reply_text(chunk)
-
-    except Exception:
-        logger.exception("Error generating AI response.")
-
-        await status.edit_text(
-            "Sorry, I couldn't answer that just now. "
-            "Please try again later. If this continues, "
-            "the service may be temporarily unavailable "
-            "or its free-tier limit may have been reached."
-        )
-
-
-# =========================
-# HANDLE TEXT MESSAGES
-# =========================
-
-async def handle_text(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-):
-    message = update.effective_message
-
-    if not message or not message.text:
-        return
-
-    if message.chat.type in ("group", "supergroup"):
-        is_reply_to_bot = (
-            message.reply_to_message is not None
-            and message.reply_to_message.from_user is not None
-            and message.reply_to_message.from_user.id
-            == context.bot.id
-        )
-
-        is_mentioned = (
-            f"@{BOT_USERNAME.lower()}" in message.text.lower()
-        )
-
-        if not (is_reply_to_bot or is_mentioned):
-            return
-
-        question = message.text
-
-        # Remove the bot mention without case sensitivity.
-        import re
-        question = re.sub(
-            rf"@{re.escape(BOT_USERNAME)}\b",
-            "",
-            question,
-            flags=re.IGNORECASE,
-        ).strip()
-
-        if not question and is_reply_to_bot:
-            question = "Please continue helping me."
-
-    else:
-        question = message.text.strip()
-
-    await answer_question(update, context, question)
-
-
-# =========================
-# WELCOME NEW MEMBERS
-# =========================
-
-async def welcome(
+async def start(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
@@ -339,60 +145,415 @@ async def welcome(
     if not message:
         return
 
-    for member in message.new_chat_members:
-        if member.id == context.bot.id:
-            continue
+    user = update.effective_user
+    first_name = user.first_name if user else "Student"
+
+    text = (
+        f"👋 Welcome, {first_name}!\n\n"
+        "🩺 Welcome to MedIntro!\n\n"
+        "Your medical learning companion for:\n"
+        "📚 Medical study resources\n"
+        "🧠 AI-powered explanations\n"
+        "📝 MCQ practice and exam preparation\n"
+        "🔬 Basic science and clinical concepts\n\n"
+        "Use the button below to open MedIntro, "
+        "or ask me a medical study question here.\n\n"
+        "Commands:\n"
+        "/start - Start the bot\n"
+        "/app - Open MedIntro\n"
+        "/ask - Ask a medical question\n"
+        "/help - See how to use the bot"
+    )
+
+    await message.reply_text(
+        text,
+        reply_markup=main_keyboard(),
+    )
+
+
+# =========================================================
+# /APP
+# =========================================================
+
+async def open_app(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    message = update.effective_message
+
+    if not message:
+        return
+
+    await message.reply_text(
+        "🚀 Open MedIntro and continue your medical studies.",
+        reply_markup=main_keyboard(),
+    )
+
+
+# =========================================================
+# /HELP
+# =========================================================
+
+async def help_command(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    message = update.effective_message
+
+    if not message:
+        return
+
+    text = (
+        "📖 MEDINTRO BOT GUIDE\n\n"
+        "1. In private chat, send me a medical question "
+        "to receive an AI explanation.\n\n"
+        "2. Use /ask followed by your question.\n"
+        "Example:\n"
+        "/ask Explain the cardiac action potential.\n\n"
+        "3. In a group, mention @MedIntroStudyBot or "
+        "reply directly to one of my messages to ask "
+        "a question.\n\n"
+        "4. Use /app to open the MedIntro website.\n\n"
+        "I can help with medical concepts, MCQs, "
+        "OSPE revision, and clinical reasoning."
+    )
+
+    await message.reply_text(
+        text,
+        reply_markup=main_keyboard(),
+    )
+
+
+# =========================================================
+# GROQ AI RESPONSE
+# =========================================================
+
+async def generate_answer(question: str) -> str:
+    response = await ai.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT,
+            },
+            {
+                "role": "user",
+                "content": question,
+            },
+        ],
+        max_tokens=900,
+        temperature=0.4,
+    )
+
+    answer = response.choices[0].message.content
+
+    if not answer:
+        return (
+            "I couldn't generate an answer this time. "
+            "Please try asking your question again."
+        )
+
+    return answer.strip()
+
+
+async def answer_question(
+    update: Update,
+    question: str,
+):
+    message = update.effective_message
+
+    if not message:
+        return
+
+    question = question.strip()
+
+    if not question:
+        await message.reply_text(
+            "Please send a question about a medical topic."
+        )
+        return
+
+    if len(question) > 12000:
+        await message.reply_text(
+            "Your question is too long. Please shorten it "
+            "and send it again."
+        )
+        return
+
+    try:
+        answer = await generate_answer(question)
+
+        # Telegram limits a text message to 4096 characters.
+        # Split long answers into safe-sized messages.
+        chunks = [
+            answer[i:i + 4000]
+            for i in range(0, len(answer), 4000)
+        ]
+
+        for chunk in chunks:
+            await message.reply_text(chunk)
+
+    except Exception:
+        logger.exception("AI response failed")
 
         await message.reply_text(
-            f"👋 Welcome, {member.first_name}!\n\n"
-            "Welcome to MedIntro Hub 🩺\n"
-            "Use /help to explore the assistant or /app "
-            "to open the MCQ website.\n\n"
-            "Learn together. Practise consistently. "
-            "Become a better medical professional."
+            "⚠️ I couldn't generate an answer right now.\n\n"
+            "Please try again shortly. The service may be "
+            "busy or temporarily unavailable."
         )
 
 
-# =========================
-# START WEBHOOK SERVER
-# =========================
+# =========================================================
+# /ASK
+# =========================================================
+
+async def ask_command(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    question = " ".join(context.args).strip()
+
+    if not question:
+        message = update.effective_message
+
+        if message:
+            await message.reply_text(
+                "Send your question after /ask.\n\n"
+                "Example:\n"
+                "/ask Explain the mechanism of beta blockers."
+            )
+        return
+
+    await answer_question(update, question)
+
+
+# =========================================================
+# PRIVATE CHAT AND GROUP MESSAGES
+# =========================================================
+
+async def handle_message(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    message = update.effective_message
+
+    if not message or not message.text:
+        return
+
+    chat = update.effective_chat
+
+    if not chat:
+        return
+
+    # In private chat, answer ordinary text messages.
+    if chat.type == ChatType.PRIVATE:
+        await answer_question(update, message.text)
+        return
+
+    # In groups, answer only when mentioned or replied to.
+    bot_username = context.application.bot_data.get(
+        "bot_username", ""
+    )
+
+    bot_id = context.application.bot_data.get("bot_id")
+
+    is_mentioned = False
+
+    if bot_username:
+        mention_pattern = (
+            r"(?<!\w)@"
+            + re.escape(bot_username)
+            + r"(?!\w)"
+        )
+
+        is_mentioned = bool(
+            re.search(
+                mention_pattern,
+                message.text,
+                flags=re.IGNORECASE,
+            )
+        )
+
+    replied_message = message.reply_to_message
+
+    is_reply_to_bot = (
+        replied_message is not None
+        and replied_message.from_user is not None
+        and replied_message.from_user.is_bot
+        and (
+            replied_message.from_user.id == bot_id
+            if bot_id is not None
+            else False
+        )
+    )
+
+    if not is_mentioned and not is_reply_to_bot:
+        return
+
+    question = message.text
+
+    if bot_username:
+        question = re.sub(
+            r"(?<!\w)@"
+            + re.escape(bot_username)
+            + r"(?!\w)",
+            "",
+            question,
+            flags=re.IGNORECASE,
+        ).strip()
+
+    if not question and is_reply_to_bot:
+        question = (
+            "Please continue helping me with this topic."
+        )
+
+    await answer_question(update, question)
+
+
+# =========================================================
+# WELCOME NEW GROUP MEMBERS
+# =========================================================
+
+async def welcome_new_members(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    message = update.effective_message
+
+    if not message or not message.new_chat_members:
+        return
+
+    bot_id = context.application.bot_data.get("bot_id")
+
+    for member in message.new_chat_members:
+        # Do not welcome the bot itself.
+        if member.id == bot_id:
+            continue
+
+        welcome_text = (
+            f"👋 Welcome, {member.first_name}!\n\n"
+            "🩺 Welcome to Medintro Hub!\n"
+            "Learn, discuss, and prepare for medical exams "
+            "with fellow students.\n\n"
+            "🚀 Open MedIntro to study:"
+        )
+
+        await message.reply_text(
+            welcome_text,
+            reply_markup=main_keyboard(),
+        )
+
+
+# =========================================================
+# BUTTON CALLBACKS
+# =========================================================
+
+async def button_callback(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    query = update.callback_query
+
+    if not query:
+        return
+
+    await query.answer()
+
+    if query.data == "study_support":
+        await query.message.reply_text(
+            "📚 You can ask me about anatomy, physiology, "
+            "biochemistry, immunology, pathology, "
+            "pharmacology, microbiology, parasitology, "
+            "MCQs, and OSPE preparation.\n\n"
+            "Example:\n"
+            "/ask Explain the differences between "
+            "innate and adaptive immunity."
+        )
+
+
+# =========================================================
+# ERROR HANDLER
+# =========================================================
+
+async def error_handler(
+    update: object,
+    context: ContextTypes.DEFAULT_TYPE,
+):
+    logger.error(
+        "An unhandled Telegram bot error occurred",
+        exc_info=context.error,
+    )
+
+
+# =========================================================
+# MAIN APPLICATION
+# =========================================================
 
 def main():
-    app = (
+    if not PUBLIC_URL:
+        raise RuntimeError(
+            "Missing public URL. Set WEBHOOK_URL or ensure "
+            "Render provides RENDER_EXTERNAL_URL."
+        )
+
+    if not BOT_TOKEN or not GROQ_API_KEY:
+        raise RuntimeError(
+            "BOT_TOKEN and GROQ_API_KEY must be configured."
+        )
+
+    application = (
         Application.builder()
         .token(BOT_TOKEN)
         .post_init(post_init)
         .build()
     )
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("app", app_command))
-    app.add_handler(CommandHandler("ask", ask_command))
+    # Commands
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("app", open_app))
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("ask", ask_command))
 
-    app.add_handler(
+    # Button callbacks
+    from telegram.ext import CallbackQueryHandler
+
+    application.add_handler(
+        CallbackQueryHandler(button_callback)
+    )
+
+    # New group members
+    application.add_handler(
         MessageHandler(
             filters.StatusUpdate.NEW_CHAT_MEMBERS,
-            welcome,
+            welcome_new_members,
         )
     )
 
-    app.add_handler(
+    # Private messages and group mentions/replies
+    application.add_handler(
         MessageHandler(
             filters.TEXT & ~filters.COMMAND,
-            handle_text,
+            handle_message,
         )
     )
 
-    app.run_webhook(
+    application.add_error_handler(error_handler)
+
+    # Use the bot token as the webhook path.
+    webhook_path = BOT_TOKEN
+
+    webhook_url = f"{PUBLIC_URL}/{webhook_path}"
+
+    logger.info("Starting MedIntro bot webhook service")
+    logger.info("Website: %s", WEBSITE_URL)
+    logger.info("AI model: %s", MODEL)
+
+    application.run_webhook(
         listen="0.0.0.0",
         port=PORT,
-        url_path=BOT_TOKEN,
-        webhook_url=(
-            f"{PUBLIC_URL.rstrip('/')}/{BOT_TOKEN}"
-        ),
+        url_path=webhook_path,
+        webhook_url=webhook_url,
         secret_token=WEBHOOK_SECRET or None,
-        allowed_updates=Update.ALL_TYPES,
         drop_pending_updates=True,
     )
 
