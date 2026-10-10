@@ -196,13 +196,18 @@ select{background:#202024;color:var(--text);border:1px solid var(--line);border-
 </section>
 </main>
 
-<script>
+<script type="module">
+import { db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
 'use strict';
 
 const CATALOG_URL = './question-bank/index.json';
 const $ = id => document.getElementById(id);
 
 let catalogue = [];
+let subjectAccess = {};
+let subjectAccessLoaded = false;
 let currentExam = null;
 let bank = null;
 let items = [];
@@ -238,32 +243,62 @@ async function fetchJson(url) {
 
 async function loadCatalogue() {
   $('catalogStatus').textContent = 'Loading exam catalogue…';
+
   try {
     const data = await fetchJson(CATALOG_URL);
     if (!data || !Array.isArray(data.exams)) {
       throw new Error('Catalogue must contain an exams array.');
     }
+
     catalogue = data.exams.filter(e =>
       e && typeof e.id === 'string' &&
       typeof e.file === 'string' &&
       typeof e.title === 'string'
     );
+
+    // A subject is available only when Firebase explicitly marks it true.
+    subjectAccess = {};
+    subjectAccessLoaded = false;
+    try {
+      const settingsSnap = await getDoc(doc(db, 'siteSettings', 'access'));
+      if (!settingsSnap.exists()) {
+        throw new Error('Access settings not found.');
+      }
+      subjectAccess = settingsSnap.data().subjects || {};
+      subjectAccessLoaded = true;
+    } catch (error) {
+      console.error('Could not verify subject access:', error);
+    }
+
     renderCatalogue();
-    $('catalogStatus').textContent = catalogue.length
-      ? 'Choose an exam to begin.'
-      : 'No valid exams were found in the catalogue.';
+    if (!subjectAccessLoaded) {
+      $('catalogStatus').textContent =
+        'Subject availability could not be verified. Please refresh and try again.';
+    } else {
+      const availableCount = catalogue.filter(
+        exam => subjectAccess[exam.id] === true
+      ).length;
+      $('catalogStatus').textContent = availableCount
+        ? 'Choose an available subject to begin.'
+        : 'No subjects are currently available.';
+    }
   } catch (error) {
     console.error(error);
     $('catalogStatus').textContent =
-      'Could not load the exam catalogue. Check question-bank/index.json and try refreshing.';
+      'Could not load the catalogue. Check question-bank/index.json and refresh.';
   }
 }
 
 function renderCatalogue() {
-  $('examCount').textContent = catalogue.length;
+  const availableCount = subjectAccessLoaded
+    ? catalogue.filter(exam => subjectAccess[exam.id] === true).length
+    : 0;
+  $('examCount').textContent = availableCount;
   $('examList').replaceChildren();
 
   catalogue.forEach(exam => {
+    const isUnlocked =
+      subjectAccessLoaded && subjectAccess[exam.id] === true;
     const card = document.createElement('article');
     card.className = 'exam-card';
 
@@ -273,17 +308,31 @@ function renderCatalogue() {
     const description = document.createElement('p');
     description.textContent = exam.description || 'Practice questions';
 
-    const button = document.createElement('button');
-    button.className = 'btn';
-    button.textContent = 'Open exam';
-    button.onclick = () => openExam(exam);
+    const status = document.createElement('p');
+    status.className = isUnlocked ? 'gold' : 'muted';
+    status.textContent = isUnlocked
+      ? '● AVAILABLE'
+      : '🔒 LOCKED — Coming soon';
 
-    card.append(title, description, button);
+    const button = document.createElement('button');
+    button.className = 'btn' + (isUnlocked ? '' : ' secondary');
+    button.textContent = isUnlocked ? 'Open exam' : 'Currently unavailable';
+    button.disabled = !isUnlocked;
+    if (isUnlocked) button.onclick = () => openExam(exam);
+
+    card.append(title, description, status, button);
     $('examList').appendChild(card);
   });
 }
 
 async function openExam(exam) {
+  if (!subjectAccessLoaded || subjectAccess[exam.id] !== true) {
+    alert('This subject is currently locked or unavailable.');
+    await loadCatalogue();
+    show('home');
+    return;
+  }
+
   $('catalogStatus').textContent = 'Loading ' + exam.title + '…';
   try {
     // Each catalogue file is relative to question-bank/.
