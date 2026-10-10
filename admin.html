@@ -8,32 +8,24 @@
   <style>
     * { box-sizing: border-box; }
     body {
-      margin: 0;
-      padding: 24px;
-      min-height: 100vh;
-      background: #101010;
-      color: #f5f5f5;
+      margin: 0; padding: 24px; min-height: 100vh;
+      background: #101010; color: #f5f5f5;
       font-family: Arial, sans-serif;
     }
     main {
-      max-width: 600px;
-      margin: 35px auto;
-      padding: 24px;
-      background: #1b1b1b;
-      border: 1px solid #b99738;
+      max-width: 700px; margin: 35px auto; padding: 24px;
+      background: #1b1b1b; border: 1px solid #b99738;
       border-radius: 16px;
     }
-    h1 { color: #d4af37; }
+    h1, h2 { color: #d4af37; }
     label { display: block; margin-top: 16px; }
     input, button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 8px;
-      border-radius: 8px;
-      font-size: 16px;
+      width: 100%; padding: 12px; margin-top: 8px;
+      border-radius: 8px; font-size: 16px;
     }
     input { border: 1px solid #555; background: #111; color: white; }
     button { cursor: pointer; font-weight: bold; border: 0; }
+    button:disabled { opacity: .55; cursor: wait; }
     .gold { background: #d4af37; color: #111; }
     .secondary { background: #333; color: white; }
     .danger { background: #8e2727; color: white; }
@@ -41,12 +33,29 @@
     #dashboard { display: none; }
     #message { overflow-wrap: anywhere; color: #f2cf69; }
     .hint { color: #bbb; line-height: 1.5; }
+    .subject {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 14px; margin: 12px 0;
+      background: #111; border: 1px solid #393939; border-radius: 10px;
+    }
+    .subject-info { min-width: 0; }
+    .subject-title { font-weight: bold; overflow-wrap: anywhere; }
+    .subject-state { font-size: 13px; color: #bbb; margin-top: 6px; }
+    .subject button { width: auto; min-width: 100px; margin: 0; }
+    .unlocked { color: #77df9a; }
+    .locked { color: #ff8585; }
+    @media (max-width: 480px) {
+      body { padding: 10px; }
+      main { margin: 10px auto; padding: 16px; }
+      .subject { align-items: flex-start; }
+      .subject button { min-width: 86px; font-size: 14px; }
+    }
   </style>
 </head>
 <body>
 <main>
   <h1>MedIntro Admin</h1>
-  <p class="hint">Private website access control</p>
+  <p class="hint">Website and subject access control</p>
 
   <section id="login">
     <h2>Administrator sign in</h2>
@@ -64,7 +73,8 @@
 
   <section id="dashboard">
     <div class="panel">
-      <h2>Manual control</h2>
+      <h2>Global website control</h2>
+      <p class="hint">These controls open or close the entire website.</p>
       <button class="gold" id="openNow">Open website now</button>
       <button class="danger" id="closeNow">Close website now</button>
     </div>
@@ -81,6 +91,17 @@
       <button class="gold" id="saveSchedule">Save schedule</button>
       <button class="secondary" id="enableSchedule">Use automatic schedule</button>
       <button class="secondary" id="disableSchedule">Disable automatic schedule</button>
+    </div>
+
+    <div class="panel">
+      <h2>Individual subject control</h2>
+      <p class="hint">
+        Unlock a subject to make it available in the student catalogue.
+        Lock a subject to mark it unavailable. New subjects are locked
+        until you unlock them here.
+      </p>
+      <button class="secondary" id="refreshSubjects">Refresh subject list</button>
+      <div id="subjects"><p class="hint">Sign in to load subjects.</p></div>
     </div>
 
     <div class="panel">
@@ -106,8 +127,11 @@
   const settingsRef = doc(db, "siteSettings", "access");
   const $ = id => document.getElementById(id);
   let isAdmin = false;
+  let subjectList = [];
 
-  function message(text) { $("message").textContent = text; }
+  function message(text) {
+    $("message").textContent = text;
+  }
 
   function requireAdmin() {
     if (!isAdmin) throw new Error("Administrator access is required.");
@@ -133,16 +157,21 @@
     return new Date(Date.UTC(+y, +mo - 1, +d, +h - 3, +mi));
   }
 
-  async function loadSettings() {
+  async function readSettings() {
     requireAdmin();
     const snap = await getDoc(settingsRef);
     if (!snap.exists()) throw new Error("Access settings document not found.");
-    const data = snap.data();
+    return snap.data();
+  }
+
+  async function loadSettings() {
+    const data = await readSettings();
     $("openAt").value = dateValue(data.openAt);
     $("closeAt").value = dateValue(data.closeAt);
     $("status").textContent =
       `Manual setting: ${data.manualOverride || "closed"} · ` +
       `Automatic schedule: ${data.scheduleEnabled ? "enabled" : "disabled"}`;
+    return data;
   }
 
   async function update(patch) {
@@ -154,52 +183,157 @@
     message("Settings saved.");
   }
 
+  async function loadSubjects() {
+    requireAdmin();
+    $("subjects").textContent = "Loading subjects…";
+    const response = await fetch("./question-bank/index.json", {
+      cache: "no-store"
+    });
+    if (!response.ok) throw new Error("Could not load question-bank/index.json.");
+    const catalogue = await response.json();
+    if (!Array.isArray(catalogue.exams)) {
+      throw new Error('The catalogue must contain an "exams" array.');
+    }
+
+    subjectList = catalogue.exams.filter(
+      exam => exam && typeof exam.id === "string" &&
+              typeof exam.title === "string"
+    );
+
+    if (!subjectList.length) {
+      $("subjects").textContent = "No subjects were found in the catalogue.";
+      return;
+    }
+
+    await renderSubjects();
+  }
+
+  async function renderSubjects() {
+    const data = await readSettings();
+    const unlocked = data.subjects || {};
+    const container = $("subjects");
+    container.replaceChildren();
+
+    subjectList.forEach(exam => {
+      const isUnlocked = unlocked[exam.id] === true;
+      const row = document.createElement("div");
+      row.className = "subject";
+
+      const info = document.createElement("div");
+      info.className = "subject-info";
+
+      const title = document.createElement("div");
+      title.className = "subject-title";
+      title.textContent = exam.title;
+
+      const state = document.createElement("div");
+      state.className = "subject-state " +
+        (isUnlocked ? "unlocked" : "locked");
+      state.textContent = isUnlocked ? "UNLOCKED" : "LOCKED";
+
+      info.append(title, state);
+
+      const button = document.createElement("button");
+      button.className = isUnlocked ? "danger" : "gold";
+      button.textContent = isUnlocked ? "Lock" : "Unlock";
+      button.onclick = async () => {
+        button.disabled = true;
+        try {
+          const latest = await readSettings();
+          const latestSubjects = { ...(latest.subjects || {}) };
+          latestSubjects[exam.id] = !isUnlocked;
+
+          await update({ subjects: latestSubjects });
+          await renderSubjects();
+          message(`${exam.title} ${!isUnlocked ? "unlocked" : "locked"}.`);
+        } catch (e) {
+          message(e.message);
+          button.disabled = false;
+        }
+      };
+
+      row.append(info, button);
+      container.append(row);
+    });
+  }
+
   $("loginForm").addEventListener("submit", async event => {
     event.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, $("email").value, $("password").value);
-    } catch (e) { message(e.message); }
+      await signInWithEmailAndPassword(
+        auth, $("email").value, $("password").value
+      );
+      message("");
+    } catch (e) {
+      message(e.message);
+    }
   });
 
   onAuthStateChanged(auth, async user => {
     isAdmin = !!user && user.uid === ADMIN_UID;
     $("login").style.display = isAdmin ? "none" : "block";
     $("dashboard").style.display = isAdmin ? "block" : "none";
+
     if (user && !isAdmin) {
       await signOut(auth);
       message("This account is not authorized to administer MedIntro.");
     } else if (isAdmin) {
-      try { await loadSettings(); }
-      catch (e) { message(e.message); }
+      try {
+        await loadSettings();
+        await loadSubjects();
+      } catch (e) {
+        message(e.message);
+      }
+    } else {
+      $("subjects").textContent = "Sign in to load subjects.";
     }
   });
 
   $("openNow").onclick = async () => {
-    try { await update({ manualOverride: "open", scheduleEnabled: false }); }
-    catch (e) { message(e.message); }
+    try {
+      await update({ manualOverride: "open", scheduleEnabled: false });
+    } catch (e) { message(e.message); }
   };
+
   $("closeNow").onclick = async () => {
-    try { await update({ manualOverride: "closed", scheduleEnabled: false }); }
-    catch (e) { message(e.message); }
+    try {
+      await update({ manualOverride: "closed", scheduleEnabled: false });
+    } catch (e) { message(e.message); }
   };
+
   $("saveSchedule").onclick = async () => {
     try {
       const openAt = fromLocalEthiopia($("openAt").value);
       const closeAt = fromLocalEthiopia($("closeAt").value);
-      if (closeAt <= openAt) throw new Error("Closing time must be after opening time.");
+      if (closeAt <= openAt) {
+        throw new Error("Closing time must be after opening time.");
+      }
       await update({
-        openAt, closeAt, scheduleEnabled: true, manualOverride: "closed"
+        openAt, closeAt, scheduleEnabled: true,
+        manualOverride: "closed"
       });
     } catch (e) { message(e.message); }
   };
+
   $("enableSchedule").onclick = async () => {
-    try { await update({ scheduleEnabled: true, manualOverride: "closed" }); }
-    catch (e) { message(e.message); }
+    try {
+      await update({ scheduleEnabled: true, manualOverride: "closed" });
+    } catch (e) { message(e.message); }
   };
+
   $("disableSchedule").onclick = async () => {
-    try { await update({ scheduleEnabled: false }); }
-    catch (e) { message(e.message); }
+    try {
+      await update({ scheduleEnabled: false });
+    } catch (e) { message(e.message); }
   };
+
+  $("refreshSubjects").onclick = async () => {
+    try {
+      await loadSubjects();
+      message("Subject list refreshed.");
+    } catch (e) { message(e.message); }
+  };
+
   $("logout").onclick = async () => {
     await signOut(auth);
     message("Signed out.");
