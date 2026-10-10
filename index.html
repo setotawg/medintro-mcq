@@ -71,6 +71,12 @@ select{background:#202024;color:var(--text);border:1px solid var(--line);border-
  .nav-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
  .btn{padding:10px 12px}
 }
+.exam-image{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line);background:#202024;cursor:zoom-in}
+.image-card{background:#1c1c20;border:1px solid var(--line);border-radius:14px;padding:12px;min-width:0}
+.image-card h3{overflow-wrap:anywhere}
+.image-viewer{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;display:grid;place-items:center;padding:16px}
+.image-viewer img{max-width:100%;max-height:82vh;object-fit:contain}
+.image-viewer button{position:absolute;top:16px;right:16px}
 </style>
 </head>
 <body>
@@ -94,7 +100,27 @@ select{background:#202024;color:var(--text);border:1px solid var(--line);border-
     <div id="examList" class="exam-grid"></div>
   </div>
   <p class="notice">Your answers are held in this page during the practice session. This public practice site does not upload your name or score.</p>
+
+  <div class="panel">
+    <p class="gold"><strong>PAST PAPER LIBRARY</strong></p>
+    <h1>Last Year Exams</h1>
+    <p class="muted">Browse past exam papers uploaded as images, organized by subject.</p>
+    <div id="pastExamStatus" class="notice" role="status">Loading past exam catalogue…</div>
+    <div id="pastSubjectList" class="exam-grid"></div>
+    <div id="pastImagePanel" class="hidden">
+      <div class="row" style="margin:18px 0 12px">
+        <div><p class="gold"><strong>PAST EXAM IMAGES</strong></p><h2 id="pastSubjectTitle"></h2></div>
+        <button class="btn secondary" id="pastBackBtn" type="button">← All subjects</button>
+      </div>
+      <div id="pastImageList" class="exam-grid"></div>
+    </div>
+  </div>
 </section>
+
+<div id="imageViewer" class="image-viewer hidden" role="dialog" aria-modal="true" aria-label="Exam image viewer">
+  <button class="btn" id="closeImageViewer" type="button">Close ✕</button>
+  <img id="viewerImage" alt="Past exam page enlarged">
+</div>
 
 <section id="setup" class="hidden">
   <button class="btn secondary" id="backCatalog">← All exams</button>
@@ -241,6 +267,64 @@ async function fetchJson(url) {
   return response.json();
 }
 
+const PAST_EXAMS_URL = './last-year-exams/index.json';
+let pastExamCatalogue = [];
+
+async function loadPastExamCatalogue() {
+  const status = $('pastExamStatus');
+  try {
+    const data = await fetchJson(PAST_EXAMS_URL);
+    if (!data || !Array.isArray(data.subjects)) throw new Error('Past-exam catalogue needs a subjects array.');
+    pastExamCatalogue = data.subjects.filter(s => s && typeof s.id === 'string' && typeof s.title === 'string' && Array.isArray(s.images));
+    renderPastSubjects();
+    status.textContent = pastExamCatalogue.length ? 'Choose a subject to view uploaded past exam images.' : 'No subjects found in the past-exam catalogue.';
+  } catch (error) {
+    console.error('Past exam catalogue could not load:', error);
+    status.textContent = 'Could not load past exams. Check last-year-exams/index.json.';
+  }
+}
+
+function renderPastSubjects() {
+  const list = $('pastSubjectList');
+  list.replaceChildren();
+  $('pastImagePanel').classList.add('hidden');
+  list.classList.remove('hidden');
+  pastExamCatalogue.forEach(subject => {
+    const card = document.createElement('article');
+    card.className = 'exam-card';
+    const title = document.createElement('h2'); title.textContent = subject.title;
+    const desc = document.createElement('p');
+    desc.textContent = subject.images.length + (subject.images.length === 1 ? ' image listed' : ' images listed');
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'btn' + (subject.images.length ? '' : ' secondary');
+    button.textContent = subject.images.length ? 'View past exams' : 'No images yet';
+    button.disabled = !subject.images.length;
+    button.onclick = () => openPastSubject(subject);
+    card.append(title, desc, button); list.appendChild(card);
+  });
+}
+
+function openPastSubject(subject) {
+  $('pastSubjectTitle').textContent = subject.title;
+  const list = $('pastImageList'); list.replaceChildren();
+  subject.images.forEach((item, i) => {
+    if (!item || typeof item.file !== 'string') return;
+    const card = document.createElement('article'); card.className = 'image-card';
+    const title = document.createElement('h3'); title.textContent = typeof item.title === 'string' ? item.title : 'Exam image ' + (i + 1);
+    const img = document.createElement('img'); img.className = 'exam-image'; img.loading = 'lazy'; img.alt = title.textContent;
+    img.src = './last-year-exams/' + subject.id + '/' + item.file;
+    img.onerror = () => { img.alt = 'Image could not be loaded: ' + item.file; img.style.minHeight = '90px'; img.style.padding = '12px'; img.style.cursor = 'default'; img.removeAttribute('src'); img.insertAdjacentText('afterend', 'Image not found. Check the filename and folder.'); };
+    img.onclick = () => { if (img.src) { $('viewerImage').src = img.src; $('imageViewer').classList.remove('hidden'); } };
+    card.append(title, img); list.appendChild(card);
+  });
+  $('pastSubjectList').classList.add('hidden');
+  $('pastImagePanel').classList.remove('hidden');
+}
+
+$('pastBackBtn').addEventListener('click', renderPastSubjects);
+$('closeImageViewer').addEventListener('click', () => { $('imageViewer').classList.add('hidden'); $('viewerImage').removeAttribute('src'); });
+$('imageViewer').addEventListener('click', e => { if (e.target === $('imageViewer')) { $('imageViewer').classList.add('hidden'); $('viewerImage').removeAttribute('src'); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { $('imageViewer').classList.add('hidden'); $('viewerImage').removeAttribute('src'); } });
+
 async function loadCatalogue() {
   $('catalogStatus').textContent = 'Loading exam catalogue…';
 
@@ -329,6 +413,7 @@ async function openExam(exam) {
   if (!subjectAccessLoaded || subjectAccess[exam.id] !== true) {
     alert('This subject is currently locked or unavailable.');
     await loadCatalogue();
+loadPastExamCatalogue();
     show('home');
     return;
   }
@@ -638,6 +723,7 @@ $('homeBtn').onclick = () => {
   show('home');
 };
 loadCatalogue();
+loadPastExamCatalogue();
 </script>
   
 <div id="siteClosedNotice" style="
@@ -708,7 +794,5 @@ loadCatalogue();
 
   checkMedIntroAccess();
 </script>
-</body>
-
 </body>
 </html>
