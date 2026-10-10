@@ -590,5 +590,76 @@ $('homeBtn').onclick = () => {
 };
 loadCatalogue();
 </script>
+  
+<div id="siteClosedNotice" style="
+  display:none; position:fixed; inset:0; z-index:99999;
+  background:#101010; color:#f5f5f5; padding:24px;
+  align-items:center; justify-content:center; text-align:center;
+  font-family:Arial,sans-serif;">
+  <div style="max-width:500px">
+    <h1 style="color:#d4af37">MedIntro</h1>
+    <h2 id="closedTitle">Practice is currently unavailable</h2>
+    <p id="closedMessage">
+      Please return during the scheduled access period.
+    </p>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp, getApp, getApps }
+    from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getFirestore, doc, getDoc }
+    from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB2o0xsKmyEY1_nmLvW6HH1Ivb26zVLzwE",
+    authDomain: "medintro-mcq.firebaseapp.com",
+    projectId: "medintro-mcq",
+    appId: "1:949981883734:web:b9a432b992b9847b1a3af7"
+  };
+
+  async function checkMedIntroAccess() {
+    const notice = document.getElementById("siteClosedNotice");
+
+    try {
+      const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const snap = await getDoc(doc(db, "siteSettings", "access"));
+
+      if (!snap.exists()) throw new Error("Access settings not found.");
+
+      const settings = snap.data();
+      const now = Date.now();
+
+      let isOpen = settings.manualOverride === "open";
+
+      if (settings.scheduleEnabled === true) {
+        const opens = settings.openAt?.toMillis?.();
+        const closes = settings.closeAt?.toMillis?.();
+
+        isOpen = Number.isFinite(opens) &&
+          Number.isFinite(closes) &&
+          now >= opens && now < closes;
+      }
+
+      if (!isOpen) {
+        document.getElementById("closedTitle").textContent =
+          "Practice is currently closed";
+        notice.style.display = "flex";
+      }
+    } catch (error) {
+      console.error("MedIntro access check failed:", error);
+      document.getElementById("closedTitle").textContent =
+        "Temporarily unavailable";
+      document.getElementById("closedMessage").textContent =
+        "We couldn't verify access. Please try again later.";
+      notice.style.display = "flex";
+    }
+  }
+
+  checkMedIntroAccess();
+</script>
+</body>
+
 </body>
 </html>
