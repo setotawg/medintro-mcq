@@ -19,9 +19,18 @@
       "id": "immunology",
       "title": "Immunology",
       "images": [
-        "immuno 1.jpg",
-        "immuno 2.jpg",
-        "immuno 3.jpg"
+        {
+          "title": "Immunology 1",
+          "file": "immuno 1.jpg"
+        },
+        {
+          "title": "Immunology 2",
+          "file": "immuno 2.jpg"
+        },
+        {
+          "title": "Immunology 3",
+          "file": "immuno 3.jpg"
+        }
       ]
     },
     {
