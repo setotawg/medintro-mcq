@@ -2,10 +2,52 @@
 {
   "exams": [
     {
+      "id": "anatomy",
+      "title": "Anatomy",
+      "description": "Practice essential human anatomy MCQs.",
+      "file": "anatomy.json"
+    },
+    {
+      "id": "physiology",
+      "title": "Physiology",
+      "description": "Practice essential human physiology MCQs.",
+      "file": "physiology.json"
+    },
+    {
+      "id": "biochemistry",
+      "title": "Biochemistry",
+      "description": "Practice essential medical biochemistry MCQs.",
+      "file": "biochemistry.json"
+    },
+    {
+      "id": "immunology",
+      "title": "Immunology",
+      "description": "Practice essential immunology MCQs.",
+      "file": "immunology.json"
+    },
+    {
+      "id": "pathology",
+      "title": "Pathology",
+      "description": "Practice general and systemic pathology MCQs.",
+      "file": "pathology.json"
+    },
+    {
+      "id": "pharmacology",
+      "title": "Pharmacology",
+      "description": "Practice essential pharmacology MCQs.",
+      "file": "pharmacology.json"
+    },
+    {
       "id": "microbiology",
       "title": "Introduction to Medical Microbiology",
       "description": "Practice essential microbiology concepts with 80 MCQs.",
       "file": "microbiology.json"
+    },
+    {
+      "id": "parasitology",
+      "title": "Parasitology",
+      "description": "Practice essential medical parasitology MCQs.",
+      "file": "parasitology.json"
     }
   ]
 }
